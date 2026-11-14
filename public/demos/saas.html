@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PULSE.CLOUD — 기능형 SaaS 웹 플랫폼</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: 'Pretendard', -apple-system, sans-serif;
+        background: #090d16;
+        color: #f1f5f9;
+        display: flex;
+        min-height: 100vh;
+      }
+      button { font-family: inherit; cursor: pointer; }
+      aside {
+        width: 220px; background: #0f1624; border-right: 1px solid rgba(255,255,255,0.08);
+        padding: 24px 16px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;
+      }
+      @media (max-width: 680px) { aside { width: 150px; padding: 16px 10px; } }
+      .app-name { font-weight: 800; color: #22d3ee; margin-bottom: 22px; font-size: 1.1rem; padding-left: 10px; }
+      .nav-item {
+        padding: 11px 14px; border-radius: 10px; font-size: 0.9rem; color: #94a3b8;
+        border: none; background: none; text-align: left; font-weight: 500;
+      }
+      .nav-item:hover { background: rgba(255,255,255,0.04); color: #fff; }
+      .nav-item.active { background: rgba(34, 211, 238, 0.14); color: #22d3ee; font-weight: 700; }
+
+      main { flex: 1; padding: 28px 32px; overflow-y: auto; }
+      .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px; }
+      .topbar h1 { font-size: 1.45rem; }
+      .badge {
+        background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 6px 12px;
+        border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+      }
+      .range-btns { display: flex; gap: 6px; }
+      .range-btn {
+        padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);
+        background: #131c2e; color: #94a3b8; font-size: 0.82rem;
+      }
+      .range-btn.active { background: #22d3ee; color: #090d16; font-weight: 700; border-color: #22d3ee; }
+
+      .banner-card {
+        position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 22px;
+        border: 1px solid rgba(255,255,255,0.09); height: 155px;
+      }
+      .banner-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+      .banner-text {
+        position: absolute; inset: 0; padding: 22px; display: flex; flex-direction: column;
+        justify-content: flex-end; background: linear-gradient(to top, rgba(9, 13, 22, 0.92), transparent);
+      }
+
+      .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 22px; }
+      .metric-card { background: #131c2e; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 18px; }
+      .metric-card span { font-size: 0.82rem; color: #94a3b8; }
+      .metric-card strong { display: block; font-size: 1.5rem; margin-top: 6px; color: #fff; }
+
+      .panel { background: #131c2e; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 22px; }
+      .panel h2 { font-size: 1.05rem; margin-bottom: 14px; }
+      .row {
+        display: flex; justify-content: space-between; align-items: center; padding: 12px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem; color: #cbd5e1;
+      }
+      .row:last-child { border-bottom: none; }
+      .view-section { display: none; }
+      .view-section.active { display: block; }
+      .search-input {
+        width: 100%; max-width: 300px; padding: 9px 12px; border-radius: 8px;
+        background: #090d16; border: 1px solid rgba(255,255,255,0.12); color: #fff; margin-bottom: 14px;
+      }
+      .save-btn {
+        padding: 10px 20px; border-radius: 10px; border: none; background: #22d3ee;
+        color: #090d16; font-weight: 700; margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <aside>
+      <div class="app-name">PULSE.CLOUD</div>
+      <button class="nav-item active" onclick="switchView('dashboard', this)">대시보드</button>
+      <button class="nav-item" onclick="switchView('users', this)">사용자 관리</button>
+      <button class="nav-item" onclick="switchView('billing', this)">결제 내역</button>
+      <button class="nav-item" onclick="switchView('settings', this)">시스템 설정</button>
+    </aside>
+
+    <main>
+      <!-- 1. 대시보드 화면 -->
+      <section id="view-dashboard" class="view-section active">
+        <div class="topbar">
+          <div>
+            <h1>실시간 서비스 운영 대시보드</h1>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="range-btns">
+              <button class="range-btn active" onclick="setRange('today', this)">오늘</button>
+              <button class="range-btn" onclick="setRange('week', this)">7일</button>
+              <button class="range-btn" onclick="setRange('month', this)">30일</button>
+            </div>
+            <span class="badge">● 정상 운영</span>
+          </div>
+        </div>
+
+        <div class="banner-card">
+          <img src="/images/demo-saas.jpg" alt="클라우드 데이터 네트워크" />
+          <div class="banner-text">
+            <span style="font-size:0.78rem; color:#22d3ee;">클라우드 모니터링 · 포트폴리오 #3</span>
+            <strong style="font-size:1.15rem;">글로벌 트래픽 & 실시간 노드 상태 분석</strong>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric-card"><span>활성 사용자</span><strong id="m-users">12,480명</strong></div>
+          <div class="metric-card"><span>누적 매출</span><strong id="m-rev">₩24,500,000</strong></div>
+          <div class="metric-card"><span>API 평균 응답속도</span><strong id="m-lat">42ms</strong></div>
+        </div>
+
+        <div class="panel">
+          <h2>최근 처리된 사용자 활동</h2>
+          <div class="row"><span>김민수님 — 프리미엄 플랜 구독 결제 완료</span><span style="color:#34d399">완료</span></div>
+          <div class="row"><span>이서연님 — 신규 프로젝트 워크스페이스 생성</span><span style="color:#38bdf8">진행중</span></div>
+          <div class="row"><span>박지훈님 — 관리자 권한 초대 수락</span><span style="color:#34d399">완료</span></div>
+        </div>
+      </section>
+
+      <!-- 2. 사용자 관리 화면 -->
+      <section id="view-users" class="view-section">
+        <div class="topbar"><h1>사용자 관리</h1></div>
+        <div class="panel">
+          <input type="text" class="search-input" placeholder="이름으로 검색..." oninput="filterUsers(this.value)" />
+          <div id="user-list">
+            <div class="row" data-name="김민수"><span>김민수 (minsu@pulse.io)</span><span style="color:#22d3ee">Admin</span></div>
+            <div class="row" data-name="이서연"><span>이서연 (seoyeon@pulse.io)</span><span>Editor</span></div>
+            <div class="row" data-name="박지훈"><span>박지훈 (jihoon@pulse.io)</span><span>Viewer</span></div>
+            <div class="row" data-name="최유진"><span>최유진 (yujin@pulse.io)</span><span>Editor</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 결제 내역 화면 -->
+      <section id="view-billing" class="view-section">
+        <div class="topbar"><h1>결제 및 정산 내역</h1></div>
+        <div class="panel">
+          <div class="row"><span>2026-11-14 · Pro 월간 구독 (주식회사 넥스트)</span><strong style="color:#34d399">₩79,000</strong></div>
+          <div class="row"><span>2026-11-13 · Enterprise 연간 계약 (아틀리에)</span><strong style="color:#34d399">₩1,824,000</strong></div>
+          <div class="row"><span>2026-11-12 · Starter 월간 구독 (스튜디오 봄)</span><strong style="color:#34d399">₩29,000</strong></div>
+        </div>
+      </section>
+
+      <!-- 4. 시스템 설정 화면 -->
+      <section id="view-settings" class="view-section">
+        <div class="topbar"><h1>시스템 환경 설정</h1></div>
+        <div class="panel">
+          <div class="row"><span>장애 발생 시 Slack 실시간 알림</span><input type="checkbox" checked /></div>
+          <div class="row"><span>일일 트래픽 리포트 이메일 자동 발송</span><input type="checkbox" checked /></div>
+          <div class="row"><span>2단계 인증(2FA) 필수 적용</span><input type="checkbox" /></div>
+          <button class="save-btn" onclick="alert('시스템 설정이 성공적으로 저장되었습니다!')">설정 저장하기</button>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const rangeStats = {
+        today: { users: '12,480명', rev: '₩24,500,000', lat: '42ms' },
+        week: { users: '48,920명', rev: '₩89,200,000', lat: '39ms' },
+        month: { users: '182,400명', rev: '₩342,000,000', lat: '41ms' },
+      };
+      function switchView(name, btn) {
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+        document.getElementById('view-' + name).classList.add('active');
+      }
+      function setRange(key, btn) {
+        document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const data = rangeStats[key];
+        document.getElementById('m-users').textContent = data.users;
+        document.getElementById('m-rev').textContent = data.rev;
+        document.getElementById('m-lat').textContent = data.lat;
+      }
+      function filterUsers(q) {
+        document.querySelectorAll('#user-list .row').forEach(row => {
+          row.style.display = row.dataset.name.includes(q.trim()) ? 'flex' : 'none';
+        });
+      }
+    </script>
+  </body>
+</html>

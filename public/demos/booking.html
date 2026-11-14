@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SERENE.CLINIC — 프라이빗 웰니스 & 실시간 예약</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: 'Pretendard', -apple-system, sans-serif;
+        background: #fdf8f6; color: #292524; line-height: 1.6;
+      }
+      button { font-family: inherit; cursor: pointer; }
+      .container { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+      header {
+        position: sticky; top: 0; z-index: 30;
+        background: rgba(255,255,255,0.92); backdrop-filter: blur(10px);
+        border-bottom: 1px solid #f1e8e4;
+      }
+      .nav-inner { height: 68px; display: flex; justify-content: space-between; align-items: center; }
+      .logo { font-weight: 800; color: #9f1239; font-size: 1.18rem; }
+
+      .wrap {
+        padding: 52px 0; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 36px; align-items: start;
+      }
+      .tag {
+        display: inline-block; background: #ffe4e6; color: #be123c;
+        font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; margin-bottom: 14px;
+      }
+      h1 { font-size: clamp(1.75rem, 3.5vw, 2.35rem); line-height: 1.28; margin-bottom: 14px; }
+      .lead { color: #57534e; font-size: 0.98rem; margin-bottom: 22px; }
+      .clinic-photo {
+        width: 100%; border-radius: 18px; object-fit: cover; aspect-ratio: 16 / 10;
+        box-shadow: 0 16px 36px rgba(159, 18, 57, 0.08);
+      }
+
+      .booking-box {
+        background: #fff; border: 1px solid #f1e8e4; border-radius: 20px; padding: 28px;
+        box-shadow: 0 14px 36px rgba(159, 18, 57, 0.07);
+      }
+      .booking-box h3 { font-size: 1.15rem; margin-bottom: 14px; }
+      .field-label { display: block; font-size: 0.83rem; font-weight: 700; color: #57534e; margin: 12px 0 6px; }
+      .booking-box select, .booking-box input {
+        width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #e7e5e4;
+        font-family: inherit; font-size: 0.9rem;
+      }
+      .times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
+      .time-btn {
+        padding: 9px; border-radius: 8px; border: 1px solid #e7e5e4; background: #fff; font-size: 0.86rem;
+      }
+      .time-btn.active { background: #9f1239; color: #fff; border-color: #9f1239; font-weight: 600; }
+      .submit-btn {
+        width: 100%; padding: 13px; border-radius: 10px; border: none;
+        background: #9f1239; color: #fff; font-weight: 700; font-size: 0.95rem; margin-top: 18px;
+      }
+
+      .reservation-list {
+        margin-top: 28px; background: #fff; border: 1px solid #f1e8e4; border-radius: 16px; padding: 22px;
+      }
+      .res-row {
+        display: flex; justify-content: space-between; align-items: center; padding: 10px 0;
+        border-bottom: 1px solid #f5f5f4; font-size: 0.88rem;
+      }
+      .res-row:last-child { border-bottom: none; }
+      .res-badge { background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 999px; font-size: 0.76rem; font-weight: 700; }
+
+      footer { border-top: 1px solid #f1e8e4; padding: 34px 0; text-align: center; color: #78716c; font-size: 0.88rem; margin-top: 40px; }
+      @media (max-width: 820px) { .wrap { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav-inner">
+        <div class="logo">SERENE.CLINIC</div>
+        <div style="font-size:0.88rem; color:#78716c;">100% 사전 예약제 · 청담 본점</div>
+      </div>
+    </header>
+
+    <div class="container">
+      <section class="wrap">
+        <div>
+          <span class="tag">프라이빗 웰니스 & 에스테틱</span>
+          <h1>오직 당신만을 위한<br />맞춤형 회복 프로그램</h1>
+          <p class="lead">
+            복잡한 전화 대기 없이 원하는 프로그램, 날짜, 시간을 선택해
+            10초 만에 방문 예약을 완료하실 수 있습니다.
+          </p>
+          <img src="/images/demo-booking.jpg" alt="세린 클리닉 라운지" class="clinic-photo" />
+
+          <div class="reservation-list">
+            <h4 style="margin-bottom:10px; font-size:0.98rem;">실시간 접수 현황</h4>
+            <div id="res-items">
+              <div class="res-row">
+                <span>김서현님 · 1:1 스킨 리밸런싱 (2026-11-15 11:30)</span>
+                <span class="res-badge">예약확정</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form class="booking-box" onsubmit="submitBooking(event)">
+          <h3>온라인 빠른 예약</h3>
+          <label class="field-label">희망 프로그램</label>
+          <select id="b-prog">
+            <option value="1:1 스킨 리밸런싱 (60분)">1:1 스킨 리밸런싱 (60분)</option>
+            <option value="시그니처 아로마 테라피 (90분)">시그니처 아로마 테라피 (90분)</option>
+            <option value="프리미엄 웰니스 컨설팅 (40분)">프리미엄 웰니스 컨설팅 (40분)</option>
+          </select>
+
+          <label class="field-label">방문 날짜</label>
+          <input type="date" id="b-date" value="2026-11-16" required />
+
+          <label class="field-label">희망 시간</label>
+          <div class="times">
+            <button type="button" class="time-btn active" onclick="pickTime(this)">10:00</button>
+            <button type="button" class="time-btn" onclick="pickTime(this)">11:30</button>
+            <button type="button" class="time-btn" onclick="pickTime(this)">14:00</button>
+            <button type="button" class="time-btn" onclick="pickTime(this)">15:30</button>
+            <button type="button" class="time-btn" onclick="pickTime(this)">17:00</button>
+            <button type="button" class="time-btn" onclick="pickTime(this)">18:30</button>
+          </div>
+
+          <label class="field-label">예약자 성함 *</label>
+          <input type="text" id="b-name" placeholder="홍길동" required />
+
+          <label class="field-label">연락처 *</label>
+          <input type="text" id="b-phone" placeholder="010-1234-5678" required />
+
+          <button type="submit" class="submit-btn">예약 확정하기</button>
+        </form>
+      </section>
+    </div>
+
+    <footer>
+      <div class="container">© 2026 SERENE.CLINIC — 포트폴리오 #6 병원·뷰티 예약 플랫폼 데모 사이트</div>
+    </footer>
+
+    <script>
+      let chosenTime = '10:00';
+      function pickTime(el) {
+        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        chosenTime = el.textContent;
+      }
+      function submitBooking(e) {
+        e.preventDefault();
+        const name = document.getElementById('b-name').value;
+        const prog = document.getElementById('b-prog').value;
+        const date = document.getElementById('b-date').value;
+        const row = document.createElement('div');
+        row.className = 'res-row';
+        row.innerHTML = '<span>' + name + '님 · ' + prog + ' (' + date + ' ' + chosenTime + ')</span><span class="res-badge">예약확정</span>';
+        document.getElementById('res-items').prepend(row);
+        alert(name + '님, ' + date + ' ' + chosenTime + ' 예약이 확정되었습니다!');
+      }
+    </script>
+  </body>
+</html>

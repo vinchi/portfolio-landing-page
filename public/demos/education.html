@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EDU.CAMPUS — 실무 교육 & 온라인 클래스 플랫폼</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: 'Pretendard', -apple-system, sans-serif;
+        background: #0f172a; color: #f8fafc; line-height: 1.6;
+      }
+      button { font-family: inherit; cursor: pointer; }
+      .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+      header {
+        position: sticky; top: 0; z-index: 30;
+        background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+      .nav-inner { height: 68px; display: flex; justify-content: space-between; align-items: center; }
+      .logo { font-weight: 800; color: #34d399; font-size: 1.15rem; }
+      .my-btn {
+        background: rgba(52, 211, 153, 0.14); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3);
+        padding: 8px 16px; border-radius: 999px; font-weight: 600; font-size: 0.86rem;
+      }
+
+      .hero {
+        padding: 60px 0 44px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 36px; align-items: center;
+      }
+      .badge {
+        display: inline-block; background: rgba(52, 211, 153, 0.14); color: #34d399;
+        padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; margin-bottom: 14px; font-weight: 600;
+      }
+      h1 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); line-height: 1.28; margin-bottom: 14px; }
+      .hero p { color: #94a3b8; font-size: 1rem; }
+      .hero-photo {
+        width: 100%; border-radius: 18px; object-fit: cover; aspect-ratio: 16 / 10;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .filters { display: flex; gap: 10px; margin: 24px 0; flex-wrap: wrap; }
+      .f-btn {
+        padding: 8px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14);
+        background: #1e293b; color: #94a3b8; font-weight: 600; font-size: 0.86rem;
+      }
+      .f-btn.active { background: #10b981; color: #064e3b; border-color: #10b981; }
+
+      .courses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding-bottom: 60px; }
+      .course-card {
+        background: #1e293b; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
+        padding: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
+      }
+      .level { font-size: 0.76rem; color: #38bdf8; font-weight: 700; display: block; margin-bottom: 6px; }
+      .course-card h3 { font-size: 1.08rem; margin-bottom: 8px; }
+      .course-card p { font-size: 0.88rem; color: #94a3b8; }
+      .price { font-weight: 800; color: #34d399; font-size: 1.05rem; margin-bottom: 10px; }
+      .enroll-btn {
+        width: 100%; padding: 10px; border-radius: 10px; border: none;
+        background: #10b981; color: #064e3b; font-weight: 700;
+      }
+
+      .modal-bg {
+        position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.72);
+        display: none; place-items: center; padding: 20px;
+      }
+      .modal-bg.open { display: grid; }
+      .modal {
+        width: 100%; max-width: 480px; background: #1e293b; border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 18px; padding: 28px;
+      }
+      .curriculum { list-style: none; margin: 16px 0 22px; display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem; color: #cbd5e1; }
+
+      footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 36px 0; text-align: center; color: #64748b; font-size: 0.88rem; }
+      @media (max-width: 800px) { .hero, .courses { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav-inner">
+        <div class="logo">EDU.CAMPUS</div>
+        <button class="my-btn" id="my-count" onclick="alert('현재 신청한 강의: ' + enrolled.length + '개\n' + (enrolled.join(', ') || '아직 없음'))">
+          내 강의실 (0)
+        </button>
+      </div>
+    </header>
+
+    <section class="container hero">
+      <div>
+        <span class="badge">실무 중심 온라인 클래스 플랫폼</span>
+        <h1>현업 전문가에게 배우는<br />가장 빠른 실무 스킬업</h1>
+        <p>난이도별 강의 필터링, 커리큘럼 미리보기 및 실시간 수강 신청 기능을 체험해 보세요.</p>
+      </div>
+      <img src="/images/demo-education.jpg" alt="온라인 학습 워크스페이스" class="hero-photo" />
+    </section>
+
+    <section class="container">
+      <div class="filters">
+        <button class="f-btn active" onclick="filterLevel('all', this)">전체 강의</button>
+        <button class="f-btn" onclick="filterLevel('beginner', this)">입문</button>
+        <button class="f-btn" onclick="filterLevel('practice', this)">실무</button>
+        <button class="f-btn" onclick="filterLevel('advanced', this)">심화</button>
+      </div>
+      <div class="courses" id="course-grid"></div>
+    </section>
+
+    <footer>
+      <div class="container">© 2026 EDU.CAMPUS — 포트폴리오 #5 교육·클래스 플랫폼 데모 사이트</div>
+    </footer>
+
+    <div class="modal-bg" id="course-modal" onclick="closeCourseModal()">
+      <div class="modal" onclick="event.stopPropagation()">
+        <span class="level" id="m-level"></span>
+        <h3 id="m-title" style="font-size:1.3rem;"></h3>
+        <ul class="curriculum" id="m-curr"></ul>
+        <div style="display:flex; gap:10px;">
+          <button class="f-btn" style="flex:1" onclick="closeCourseModal()">닫기</button>
+          <button class="enroll-btn" style="flex:2" onclick="confirmEnroll()">수강 신청하기</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const courses = [
+        { id: 1, level: 'beginner', levelText: '입문 · 4주 완성', title: '비전공자를 위한 웹 개발 첫걸음', desc: 'HTML, CSS부터 나만의 포트폴리오 사이트 배포까지 단계별로 배웁니다.', price: '190,000원', curr: ['1주차: 웹 구조와 HTML5 핵심', '2주차: 모던 CSS 레이아웃과 반응형', '3주차: JavaScript 인터랙션 기초', '4주차: GitHub Pages 무료 배포'] },
+        { id: 2, level: 'practice', levelText: '실무 · 6주 완성', title: 'AI 활용 업무 자동화 마스터', desc: '반복 업무를 80% 줄이는 실전 프롬프트와 노코드 자동화 워크플로우.', price: '280,000원', curr: ['1~2주차: 업무용 프롬프트 엔지니어링', '3~4주차: API 연동 및 자동 리포팅', '5~6주차: 사내 챗봇 & 대시보드 구축'] },
+        { id: 3, level: 'advanced', levelText: '심화 · 8주 완성', title: 'React 풀스택 프로덕트 런칭', desc: '실제 결제와 데이터베이스가 연결된 나만의 SaaS 서비스를 완성합니다.', price: '420,000원', curr: ['1~3주차: React 상태관리 및 아키텍처', '4~6주차: Supabase DB & 보안 인증', '7~8주차: PG 결제 연동 및 실서비스 배포'] },
+      ];
+      let activeLevel = 'all';
+      let selectedCourse = null;
+      let enrolled = [];
+
+      function renderCourses() {
+        const list = courses.filter(c => activeLevel === 'all' || c.level === activeLevel);
+        document.getElementById('course-grid').innerHTML = list.map(c => `
+          <article class="course-card">
+            <div>
+              <span class="level">${c.levelText}</span>
+              <h3>${c.title}</h3>
+              <p>${c.desc}</p>
+            </div>
+            <div>
+              <div class="price">${c.price}</div>
+              <button class="enroll-btn" onclick="openCourseModal(${c.id})">커리큘럼 & 수강신청</button>
+            </div>
+          </article>
+        `).join('');
+      }
+      function filterLevel(lvl, btn) {
+        activeLevel = lvl;
+        document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderCourses();
+      }
+      function openCourseModal(id) {
+        selectedCourse = courses.find(c => c.id === id);
+        document.getElementById('m-level').textContent = selectedCourse.levelText;
+        document.getElementById('m-title').textContent = selectedCourse.title;
+        document.getElementById('m-curr').innerHTML = selectedCourse.curr.map(w => '<li>✓ ' + w + '</li>').join('');
+        document.getElementById('course-modal').classList.add('open');
+      }
+      function closeCourseModal() { document.getElementById('course-modal').classList.remove('open'); }
+      function confirmEnroll() {
+        if (!enrolled.includes(selectedCourse.title)) enrolled.push(selectedCourse.title);
+        document.getElementById('my-count').textContent = '내 강의실 (' + enrolled.length + ')';
+        alert('[' + selectedCourse.title + '] 수강 신청이 완료되었습니다!');
+        closeCourseModal();
+      }
+      renderCourses();
+    </script>
+  </body>
+</html>

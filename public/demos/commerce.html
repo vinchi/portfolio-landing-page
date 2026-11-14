@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAISON.SELECT — 라이프스타일 D2C 온라인 쇼핑몰</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: 'Pretendard', -apple-system, sans-serif;
+        background: #fafaf9;
+        color: #1c1917;
+        line-height: 1.55;
+      }
+      button { font-family: inherit; cursor: pointer; }
+      .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+      header {
+        position: sticky; top: 0; z-index: 30;
+        background: rgba(255,255,255,0.92); backdrop-filter: blur(10px);
+        border-bottom: 1px solid #e7e5e4;
+      }
+      .nav-inner { height: 70px; display: flex; justify-content: space-between; align-items: center; }
+      .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 0.04em; }
+      .cart-btn {
+        background: #1c1917; color: #fff; border: none; padding: 9px 18px;
+        border-radius: 999px; font-size: 0.88rem; font-weight: 600;
+      }
+
+      .banner {
+        position: relative; height: 320px; overflow: hidden;
+        display: flex; align-items: center; justify-content: center; text-align: center; color: #fff;
+      }
+      .banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      .banner-overlay { position: absolute; inset: 0; background: rgba(28, 25, 23, 0.54); }
+      .banner-content { position: relative; z-index: 2; padding: 0 24px; }
+      .banner span { font-size: 0.82rem; color: #fde68a; letter-spacing: 0.06em; font-weight: 700; }
+      .banner h1 { font-size: clamp(1.7rem, 3.8vw, 2.5rem); margin: 10px 0 12px; }
+      .banner p { color: #e7e5e4; font-size: 0.98rem; }
+
+      .toolbar {
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+        gap: 14px; padding: 36px 0 24px;
+      }
+      .cats { display: flex; gap: 8px; flex-wrap: wrap; }
+      .cat-btn {
+        padding: 8px 16px; border-radius: 999px; border: 1px solid #d6d3d1;
+        background: #fff; color: #57534e; font-weight: 600; font-size: 0.86rem;
+      }
+      .cat-btn.active { background: #1c1917; color: #fff; border-color: #1c1917; }
+      .search-box {
+        padding: 9px 14px; border-radius: 999px; border: 1px solid #d6d3d1;
+        background: #fff; font-size: 0.88rem; width: 220px;
+      }
+
+      .products {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; padding-bottom: 70px;
+      }
+      .item {
+        background: #fff; border: 1px solid #e7e5e4; border-radius: 16px; overflow: hidden;
+        display: flex; flex-direction: column; justify-content: space-between;
+      }
+      .thumb { height: 185px; overflow: hidden; background: #f5f5f4; }
+      .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+      .item:hover .thumb img { transform: scale(1.04); }
+      .info { padding: 18px; }
+      .info small { font-size: 0.75rem; color: #78716c; }
+      .info h3 { font-size: 1rem; margin: 4px 0 6px; }
+      .price { font-weight: 800; color: #b45309; margin-bottom: 14px; font-size: 1.02rem; }
+      .add-btn {
+        width: 100%; padding: 10px; border-radius: 9px; border: 1px solid #1c1917;
+        background: #fff; font-weight: 700; font-size: 0.88rem;
+      }
+      .add-btn:hover { background: #1c1917; color: #fff; }
+
+      /* 슬라이드 장바구니 드로어 */
+      .drawer-bg {
+        position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.5);
+        display: none; justify-content: flex-end;
+      }
+      .drawer-bg.open { display: flex; }
+      .drawer {
+        width: 100%; max-width: 390px; background: #fff; height: 100%; padding: 26px;
+        display: flex; flex-direction: column; justify-content: space-between;
+      }
+      .drawer-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #e7e5e4; }
+      .drawer-items { flex: 1; overflow-y: auto; padding: 16px 0; display: flex; flex-direction: column; gap: 14px; }
+      .cart-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #f5f5f4; }
+      .qty-ctrl { display: flex; align-items: center; gap: 8px; }
+      .qty-ctrl button { width: 26px; height: 26px; border-radius: 6px; border: 1px solid #d6d3d1; background: #fff; }
+      .drawer-foot { border-top: 1px solid #e7e5e4; padding-top: 16px; }
+      .checkout-btn {
+        width: 100%; padding: 13px; border-radius: 10px; border: none;
+        background: #1c1917; color: #fff; font-weight: 700; font-size: 0.95rem; margin-top: 12px;
+      }
+
+      footer { border-top: 1px solid #e7e5e4; padding: 32px 0; text-align: center; color: #78716c; font-size: 0.88rem; }
+      @media (max-width: 780px) { .products { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav-inner">
+        <div class="logo">MAISON.SELECT</div>
+        <button class="cart-btn" id="cart-btn" onclick="openCart()">장바구니 (0)</button>
+      </div>
+    </header>
+
+    <section class="banner">
+      <img src="/images/demo-commerce.jpg" alt="메종 셀렉트 쇼룸" />
+      <div class="banner-overlay"></div>
+      <div class="banner-content">
+        <span>2026 WINTER COLLECTION</span>
+        <h1>일상에 온기를 더하는 라이프스타일 스토어</h1>
+        <p>카테고리 필터링과 실시간 장바구니 수량·결제 계산을 직접 체험해 보세요.</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="toolbar">
+        <div class="cats">
+          <button class="cat-btn active" onclick="filterCat('all', this)">전체</button>
+          <button class="cat-btn" onclick="filterCat('furniture', this)">가구</button>
+          <button class="cat-btn" onclick="filterCat('object', this)">오브제</button>
+          <button class="cat-btn" onclick="filterCat('table', this)">테이블웨어</button>
+        </div>
+        <input type="text" class="search-box" placeholder="상품명 검색..." oninput="searchProducts(this.value)" />
+      </div>
+
+      <section class="products" id="product-grid"></section>
+    </div>
+
+    <footer>
+      <div class="container">© 2026 MAISON.SELECT — 포트폴리오 #4 이커머스 쇼핑몰 데모 사이트</div>
+    </footer>
+
+    <!-- 장바구니 드로어 -->
+    <div class="drawer-bg" id="cart-drawer" onclick="closeCart()">
+      <div class="drawer" onclick="event.stopPropagation()">
+        <div class="drawer-head">
+          <h3>장바구니</h3>
+          <button onclick="closeCart()" style="border:none; background:none; font-size:1.2rem;">✕</button>
+        </div>
+        <div class="drawer-items" id="cart-items"></div>
+        <div class="drawer-foot">
+          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.05rem;">
+            <span>총 결제 예정 금액</span>
+            <span id="cart-total">0원</span>
+          </div>
+          <button class="checkout-btn" onclick="checkout()">주문하기</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const catalog = [
+        { id: 1, cat: 'furniture', catLabel: '가구', name: '미니멀 원목 라운지 체어', price: 289000, img: '/images/demo-commerce.jpg' },
+        { id: 2, cat: 'object', catLabel: '오브제', name: '핸드크래프트 세라믹 화병', price: 94000, img: '/images/demo-booking.jpg' },
+        { id: 3, cat: 'furniture', catLabel: '가구', name: '노르딕 오크 사이드 테이블', price: 168000, img: '/images/demo-brand.jpg' },
+        { id: 4, cat: 'table', catLabel: '테이블웨어', name: '매트 스톤웨어 머그 2P', price: 38000, img: '/images/demo-education.jpg' },
+        { id: 5, cat: 'object', catLabel: '오브제', name: '트래버틴 아치 캔들 홀더', price: 62000, img: '/images/demo-booking.jpg' },
+        { id: 6, cat: 'table', catLabel: '테이블웨어', name: '월넛 우드 서빙 트레이', price: 54000, img: '/images/demo-commerce.jpg' },
+      ];
+
+      let currentCat = 'all';
+      let keyword = '';
+      let cart = [];
+
+      function renderProducts() {
+        const list = catalog.filter(p =>
+          (currentCat === 'all' || p.cat === currentCat) &&
+          p.name.toLowerCase().includes(keyword.toLowerCase())
+        );
+        document.getElementById('product-grid').innerHTML = list.map(p => `
+          <article class="item">
+            <div class="thumb"><img src="${p.img}" alt="${p.name}" /></div>
+            <div class="info">
+              <small>${p.catLabel}</small>
+              <h3>${p.name}</h3>
+              <div class="price">${p.price.toLocaleString()}원</div>
+              <button class="add-btn" onclick="addToCart(${p.id})">장바구니 담기</button>
+            </div>
+          </article>
+        `).join('');
+      }
+
+      function filterCat(cat, btn) {
+        currentCat = cat;
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderProducts();
+      }
+      function searchProducts(val) { keyword = val; renderProducts(); }
+
+      function addToCart(id) {
+        const existing = cart.find(c => c.id === id);
+        if (existing) existing.qty += 1;
+        else {
+          const item = catalog.find(p => p.id === id);
+          cart.push({ ...item, qty: 1 });
+        }
+        updateCartUI();
+        openCart();
+      }
+
+      function changeQty(id, delta) {
+        cart = cart.map(c => c.id === id ? { ...c, qty: c.qty + delta } : c).filter(c => c.qty > 0);
+        updateCartUI();
+      }
+
+      function updateCartUI() {
+        const totalQty = cart.reduce((s, c) => s + c.qty, 0);
+        const totalAmt = cart.reduce((s, c) => s + c.price * c.qty, 0);
+        document.getElementById('cart-btn').textContent = '장바구니 (' + totalQty + ')';
+        document.getElementById('cart-total').textContent = totalAmt.toLocaleString() + '원';
+        document.getElementById('cart-items').innerHTML = cart.length === 0
+          ? '<p style="color:#78716c; text-align:center; padding:40px 0;">장바구니가 비어 있습니다.</p>'
+          : cart.map(c => `
+            <div class="cart-row">
+              <div>
+                <strong style="font-size:0.9rem;">${c.name}</strong>
+                <div style="font-size:0.82rem; color:#b45309;">${(c.price * c.qty).toLocaleString()}원</div>
+              </div>
+              <div class="qty-ctrl">
+                <button onclick="changeQty(${c.id}, -1)">-</button>
+                <span>${c.qty}</span>
+                <button onclick="changeQty(${c.id}, 1)">+</button>
+              </div>
+            </div>
+          `).join('');
+      }
+
+      function openCart() { document.getElementById('cart-drawer').classList.add('open'); }
+      function closeCart() { document.getElementById('cart-drawer').classList.remove('open'); }
+      function checkout() {
+        if (cart.length === 0) return alert('장바구니에 상품을 담아주세요.');
+        alert('총 ' + document.getElementById('cart-total').textContent + ' 주문이 완료되었습니다!');
+        cart = []; updateCartUI(); closeCart();
+      }
+
+      renderProducts();
+      updateCartUI();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+# 패키지 및 빌드 결과물 제외
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# macOS 및 에디터 임시 파일 제외
+.DS_Store
+.vscode/
+.idea/

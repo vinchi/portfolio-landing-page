@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATELIER.CO — 건축 & 공간 디자인 스튜디오</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        font-family: 'Pretendard', -apple-system, sans-serif;
+        background: #f8fafc;
+        color: #0f172a;
+        line-height: 1.65;
+      }
+      a { color: inherit; text-decoration: none; }
+      button { font-family: inherit; cursor: pointer; }
+      .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+      header {
+        position: sticky; top: 0; z-index: 30;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .nav-inner { height: 70px; display: flex; justify-content: space-between; align-items: center; }
+      .brand { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.02em; }
+      .menu { display: flex; gap: 26px; font-size: 0.92rem; color: #475569; }
+      .menu a:hover { color: #0f172a; font-weight: 600; }
+      .cta-sm {
+        background: #0f172a; color: #fff; padding: 9px 18px; border-radius: 8px;
+        font-size: 0.88rem; font-weight: 600; border: none;
+      }
+
+      .hero {
+        padding: 72px 0;
+        display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center;
+      }
+      .pill {
+        display: inline-block; background: #e0e7ff; color: #4338ca;
+        font-size: 0.8rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; margin-bottom: 16px;
+      }
+      h1 { font-size: clamp(1.9rem, 3.8vw, 2.8rem); line-height: 1.25; margin-bottom: 16px; }
+      .hero p { color: #475569; font-size: 1.05rem; margin-bottom: 26px; }
+      .studio-photo {
+        width: 100%; border-radius: 20px; object-fit: cover; aspect-ratio: 4 / 3;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+      }
+
+      .section { padding: 72px 0; }
+      .section-title { font-size: 1.9rem; font-weight: 800; margin-bottom: 10px; }
+      .section-sub { color: #64748b; margin-bottom: 32px; }
+
+      /* 필터 */
+      .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+      .filter-btn {
+        padding: 8px 18px; border-radius: 999px; border: 1px solid #cbd5e1;
+        background: #fff; color: #475569; font-weight: 600; font-size: 0.88rem;
+      }
+      .filter-btn.active { background: #0f172a; color: #fff; border-color: #0f172a; }
+
+      .works { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+      .work-item {
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden;
+        transition: transform 0.2s; cursor: pointer;
+      }
+      .work-item:hover { transform: translateY(-4px); }
+      .work-img { width: 100%; height: 170px; object-fit: cover; display: block; }
+      .work-body { padding: 20px; }
+      .work-cat { font-size: 0.76rem; color: #4f46e5; font-weight: 700; }
+      .work-body h4 { margin: 6px 0 8px; font-size: 1.08rem; }
+      .work-body p { font-size: 0.88rem; color: #64748b; }
+
+      /* 프로세스 */
+      .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+      .process-card {
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px;
+      }
+      .process-num { font-weight: 800; color: #4f46e5; font-size: 1.2rem; margin-bottom: 8px; }
+
+      /* 문의 폼 */
+      .contact-box {
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 22px; padding: 40px;
+        display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
+      }
+      .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+      .form-row label { font-size: 0.85rem; font-weight: 600; color: #334155; }
+      .form-row input, .form-row textarea {
+        padding: 11px 14px; border-radius: 10px; border: 1px solid #cbd5e1;
+        font-family: inherit; font-size: 0.92rem;
+      }
+      footer {
+        border-top: 1px solid #e2e8f0; padding: 36px 0; text-align: center;
+        color: #64748b; font-size: 0.88rem; margin-top: 40px;
+      }
+
+      @media (max-width: 820px) {
+        .hero, .works, .process-grid, .contact-box { grid-template-columns: 1fr; }
+        .menu { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav-inner">
+        <a href="#" class="brand">ATELIER.CO</a>
+        <nav class="menu">
+          <a href="#works">포트폴리오</a>
+          <a href="#process">진행 프로세스</a>
+          <a href="#contact">상담 문의</a>
+        </nav>
+        <a href="#contact" class="cta-sm">프로젝트 의뢰</a>
+      </div>
+    </header>
+
+    <section class="container hero">
+      <div>
+        <span class="pill">건축 · 인테리어 브랜드 스튜디오</span>
+        <h1>시간이 지나도 변치 않는<br />공간의 가치를 설계합니다</h1>
+        <p>
+          ATELIER.CO는 서울을 기반으로 주거, 상업, 오피스 공간의 본질을 탐구하는
+          크리에이티브 디자인 스튜디오입니다.
+        </p>
+        <a href="#works" class="cta-sm" style="display:inline-block; padding:13px 24px;">대표 작업물 보기</a>
+      </div>
+      <img src="/images/demo-brand.jpg" alt="ATELIER 스튜디오 공간" class="studio-photo" />
+    </section>
+
+    <section id="works" class="section">
+      <div class="container">
+        <h2 class="section-title">선택된 공간 아카이브</h2>
+        <p class="section-sub">카테고리를 클릭해 분야별 프로젝트를 필터링해 보세요.</p>
+
+        <div class="filters">
+          <button class="filter-btn active" onclick="filterWorks('all', this)">전체 (6)</button>
+          <button class="filter-btn" onclick="filterWorks('office', this)">오피스</button>
+          <button class="filter-btn" onclick="filterWorks('retail', this)">상업 공간</button>
+          <button class="filter-btn" onclick="filterWorks('living', this)">주거 공간</button>
+        </div>
+
+        <div class="works" id="works-grid">
+          <article class="work-item" data-cat="office" onclick="alert('한남동 크리에이티브 오피스 상세 아카이브 페이지입니다.')">
+            <img src="/images/demo-brand.jpg" class="work-img" alt="한남동 오피스" />
+            <div class="work-body">
+              <span class="work-cat">OFFICE · 2026</span>
+              <h4>한남동 크리에이티브 스튜디오</h4>
+              <p>자연광과 원목 소재를 중심으로 집중과 소통이 공존하는 업무 공간</p>
+            </div>
+          </article>
+          <article class="work-item" data-cat="retail" onclick="alert('성수동 플래그십 쇼룸 상세 아카이브 페이지입니다.')">
+            <img src="/images/demo-commerce.jpg" class="work-img" alt="성수동 쇼룸" />
+            <div class="work-body">
+              <span class="work-cat">RETAIL · 2026</span>
+              <h4>성수동 라이프스타일 쇼룸</h4>
+              <p>브랜드의 결을 온전히 느낄 수 있도록 동선을 비운 미니멀 전시 공간</p>
+            </div>
+          </article>
+          <article class="work-item" data-cat="living" onclick="alert('평창동 단독주택 리모델링 상세 아카이브 페이지입니다.')">
+            <img src="/images/demo-booking.jpg" class="work-img" alt="평창동 주택" />
+            <div class="work-body">
+              <span class="work-cat">LIVING · 2025</span>
+              <h4>평창동 테라스 하우스</h4>
+              <p>계절의 빛이 거실 깊숙이 스며드는 따뜻한 톤의 주거 프로젝트</p>
+            </div>
+          </article>
+          <article class="work-item" data-cat="office" onclick="alert('판교 테크라운지 상세 아카이브 페이지입니다.')">
+            <img src="/images/demo-education.jpg" class="work-img" alt="판교 라운지" />
+            <div class="work-body">
+              <span class="work-cat">OFFICE · 2025</span>
+              <h4>판교 스타트업 워크 라운지</h4>
+              <p>유연한 팀 미팅과 개인 몰입을 모두 지원하는 모듈형 오피스</p>
+            </div>
+          </article>
+          <article class="work-item" data-cat="retail" onclick="alert('청담 웰니스 라운지 상세 아카이브 페이지입니다.')">
+            <img src="/images/demo-booking.jpg" class="work-img" alt="청담 라운지" />
+            <div class="work-body">
+              <span class="work-cat">RETAIL · 2025</span>
+              <h4>청담 프라이빗 클리닉</h4>
+              <p>방문객이 들어서는 순간 편안함을 느끼는 곡선형 트래버틴 라운지</p>
+            </div>
+          </article>
+          <article class="work-item" data-cat="living" onclick="alert('연희동 아틀리에 하우스 상세 아카이브 페이지입니다.')">
+            <img src="/images/demo-commerce.jpg" class="work-img" alt="연희동 주택" />
+            <div class="work-body">
+              <span class="work-cat">LIVING · 2024</span>
+              <h4>연희동 아틀리에 레지던스</h4>
+              <p>작업실과 주거 공간이 자연스럽게 이어지는 복층 구조 리노베이션</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="process" class="section">
+      <div class="container">
+        <h2 class="section-title">체계적인 진행 프로세스</h2>
+        <p class="section-sub">상담부터 준공 후 사후 관리까지 투명하게 소통합니다.</p>
+        <div class="process-grid">
+          <div class="process-card"><div class="process-num">01</div><h4>사전 미팅 & 현장 실측</h4><p>공간 목적과 예산 분석</p></div>
+          <div class="process-card"><div class="process-num">02</div><h4>콘셉트 & 3D 설계</h4><p>도면 및 3D 시뮬레이션</p></div>
+          <div class="process-card"><div class="process-num">03</div><h4>정밀 시공 & 감리</h4><p>주간 공정 리포트 공유</p></div>
+          <div class="process-card"><div class="process-num">04</div><h4>준공 및 스타일링</h4><p>가구 배치 및 1년 A/S</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="contact-box">
+          <div>
+            <h2 class="section-title">새로운 공간을 함께 고민합니다</h2>
+            <p class="section-sub">
+              공간 규모와 희망 일정을 남겨주시면 1영업일 이내로 담당 디렉터가 연락드립니다.
+            </p>
+            <p style="font-size:0.9rem; color:#475569;">
+              • 주소: 서울특별시 용산구 한남대로 42길 18<br />
+              • 이메일: studio@atelier-co.kr<br />
+              • 전화: 02-1234-5678
+            </p>
+          </div>
+          <form onsubmit="submitInquiry(event)">
+            <div class="form-row">
+              <label>성함 / 기업명 *</label>
+              <input type="text" required placeholder="김아틀" id="b-name" />
+            </div>
+            <div class="form-row">
+              <label>연락처 *</label>
+              <input type="text" required placeholder="010-0000-0000" id="b-phone" />
+            </div>
+            <div class="form-row">
+              <label>프로젝트 내용</label>
+              <textarea rows="3" placeholder="예: 성수동 40평대 쇼룸 인테리어 문의"></textarea>
+            </div>
+            <button type="submit" class="cta-sm" style="width:100%; padding:13px;">상담 문의 접수하기</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">© 2026 ATELIER.CO — 포트폴리오 #2 브랜드 홈페이지 데모 사이트</div>
+    </footer>
+
+    <script>
+      function filterWorks(cat, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.work-item').forEach(item => {
+          item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'block' : 'none';
+        });
+      }
+      function submitInquiry(e) {
+        e.preventDefault();
+        alert(document.getElementById('b-name').value + '님, 브랜드 상담 문의가 정상 접수되었습니다!');
+      }
+    </script>
+  </body>
+</html>
