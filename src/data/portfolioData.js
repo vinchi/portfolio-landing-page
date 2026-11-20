@@ -9,7 +9,7 @@
 
 export const profileData = {
   brandName: 'NEX.STUDIO',
-  ownerName: '김개발',
+  ownerName: '전민수',
   heroBadge: '포트폴리오 미리보기 & 실시간 맞춤 견적',
   heroTitleLine1: '실제 포트폴리오를 직접 보고,',
   heroTitleHighlight: '원하는 기능대로 견적',
@@ -17,7 +17,17 @@ export const profileData = {
   heroDescription:
     '아래 브라우저 화면에서 제가 제작한 포트폴리오 웹사이트들을 직접 클릭하고 둘러보신 뒤, 원하시는 옵션을 선택해 예상 제작 비용과 기간을 바로 확인하실 수 있습니다.',
   githubUrl: 'https://github.com/your-github-id',
-  email: 'hello@example.com',
+  email: 'ceo@nexstudio.kr',
+  // ⭐ 상용화 시 본인의 실제 사업자 정보로 수정해 주세요!
+  businessInfo: {
+    companyName: 'NEX.STUDIO (넥스스튜디오)',
+    ceoName: '전민수',
+    businessNumber: '000-00-00000',
+    ecommerceNumber: '제2026-서울강남-00000호',
+    address: '서울특별시 강남구 테헤란로 000, 00층',
+    phone: '070-4757-7370',
+    hours: '평일 10:00 ~ 18:00 (점심 12:30 ~ 13:30 / 주말·공휴일 휴무)',
+  },
 }
 
 /**
@@ -34,7 +44,8 @@ export const portfolioSites = [
     thumbnail: '/images/demo-landing.jpg',
     displayUrl: 'https://nova-studio.portfolio.dev',
     description:
-      '제품이나 서비스를 한 페이지에서 강렬하게 소개하고 문의/신청 전환율을 높이는 모던 다크 랜딩 페이지입니다.',
+      '실제 작동하는 AI 워크플로우 파이프라인 시뮬레이터와 ROI 절감 계산기, 월간/연간 요금제 토글이 탑재된 인터랙티브 프로덕트 사이트입니다.',
+    techBadges: ['AI 워크플로우 시뮬레이터', 'ROI 계산기', '요금제 토글', '다크 글래스 UI'],
     matchedPlanId: 'plan-landing',
   },
   {
@@ -45,7 +56,8 @@ export const portfolioSites = [
     thumbnail: '/images/demo-brand.jpg',
     displayUrl: 'https://atelier-co.portfolio.dev',
     description:
-      '회사 소개, 작업물 아카이브, 문의 페이지까지 깔끔하고 신뢰감 있게 구성한 브랜드 웹사이트입니다.',
+      'Before/After 공간 비교 슬라이더와 평수·마감재 예산 시뮬레이터, 에디토리얼 프로젝트 상세 모달을 갖춘 하이엔드 건축 스튜디오 웹사이트입니다.',
+    techBadges: ['멀티뷰 아카이브', 'Before/After 비교 슬라이더', '평수·예산 시뮬레이터', '에디토리얼 모달'],
     matchedPlanId: 'plan-brand',
   },
   {
@@ -56,7 +68,8 @@ export const portfolioSites = [
     thumbnail: '/images/demo-saas.jpg',
     displayUrl: 'https://pulse-cloud.portfolio.dev',
     description:
-      '실시간 데이터 시각화, 사용자 관리, 결제 내역 조회 등 복잡한 웹 애플리케이션 기능을 담은 플랫폼입니다.',
+      '5개 화면이 전환되는 SPA 대시보드에 실시간 인터랙티브 SVG 차트, 라이브 로그 스트림, 팀원 초대(RBAC) 및 CSV 내보내기를 구현한 클라우드 관제 플랫폼입니다.',
+    techBadges: ['실시간 SVG 차트', '5개 뷰 SPA 라우팅', 'RBAC 팀원·CSV 내보내기', '라이브 로그 스트림'],
     matchedPlanId: 'plan-platform',
   },
   {
@@ -67,7 +80,8 @@ export const portfolioSites = [
     thumbnail: '/images/demo-commerce.jpg',
     displayUrl: 'https://maison-select.portfolio.dev',
     description:
-      '감각적인 상품 큐레이션과 장바구니 담기, 간편 결제 연동까지 매끄러운 구매 경험을 제공하는 쇼핑몰입니다.',
+      '옵션 선택과 리뷰 작성이 가능한 상품 상세 모달, 무료배송 게이지·쿠폰 할인(WELCOME10) 장바구니, 3단계 체크아웃 및 주문내역 조회가 작동하는 쇼핑몰입니다.',
+    techBadges: ['옵션·리뷰 작성 모달', '쿠폰·무료배송 게이지', '3단계 결제 체크아웃', '위시리스트·주문내역'],
     matchedPlanId: 'plan-commerce',
   },
   {
@@ -78,7 +92,8 @@ export const portfolioSites = [
     thumbnail: '/images/demo-education.jpg',
     displayUrl: 'https://edu-campus.portfolio.dev',
     description:
-      '강의 커리큘럼 안내, 수강생 모집 및 결제 연동에 최적화된 교육·강의 플랫폼 웹사이트입니다.',
+      '수강 신청 후 내 강의실(LMS 플레이어)로 전환되어 레슨 완료 진도율 트래킹, 100% 달성 시 수료증 발급, 자동저장 강의노트와 Q&A가 작동하는 교육 플랫폼입니다.',
+    techBadges: ['LMS 강의 플레이어', '진도율·수료증 발급', '자동저장 강의노트', 'Q&A 게시판'],
     matchedPlanId: 'plan-commerce',
   },
   {
@@ -89,7 +104,8 @@ export const portfolioSites = [
     thumbnail: '/images/demo-booking.jpg',
     displayUrl: 'https://serene-clinic.portfolio.dev',
     description:
-      '고객이 원하는 날짜와 시간을 직접 선택해 방문 예약을 접수할 수 있는 병원·클리닉·스튜디오 전용 웹입니다.',
+      '커스텀 월간 캘린더로 예약 가능 시간을 실시간 필터링하고, 4단계 위자드로 QR 모바일 예약권 발급과 예약 시간 변경·취소까지 처리하는 예약 앱입니다.',
+    techBadges: ['커스텀 월간 캘린더', '4단계 예약 위자드', 'QR 모바일 예약권', '예약 변경·취소'],
     matchedPlanId: 'plan-commerce',
   },
 ]

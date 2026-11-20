@@ -1,0 +1,64 @@
+# ============================================================================
+# NEX.STUDIO 데이터 조회 쿼리 (Queries)
+# ============================================================================
+
+query ListPortfolios @auth(level: PUBLIC) {
+  portfolios(orderBy: [{ sortOrder: ASC }]) {
+    id
+    name
+    category
+    url
+    displayUrl
+    thumbnail
+    description
+    matchedPlanId
+    sortOrder
+  }
+}
+
+query ListQuotePlans @auth(level: PUBLIC) {
+  quotePlans(orderBy: [{ sortOrder: ASC }]) {
+    id
+    name
+    subtitle
+    price
+    days
+    sortOrder
+  }
+}
+
+query ListQuoteFeatures @auth(level: PUBLIC) {
+  quoteFeatures(orderBy: [{ sortOrder: ASC }]) {
+    id
+    name
+    description
+    price
+    days
+    sortOrder
+  }
+}
+
+query GetEventConfig @auth(level: PUBLIC) {
+  eventConfig(id: 1) {
+    id
+    isHalfPriceActive
+    title
+    subtitle
+  }
+}
+
+query ListQuotes @auth(level: PUBLIC) {
+  quotes(orderBy: [{ createdAt: DESC }]) {
+    id
+    clientNameEnc
+    clientContactEnc
+    clientMemoEnc
+    planName
+    featureNames
+    scheduleName
+    totalPrice
+    totalDays
+    status
+    createdAt
+  }
+}

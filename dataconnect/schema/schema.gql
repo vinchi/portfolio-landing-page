@@ -1,0 +1,56 @@
+# ============================================================================
+# NEX.STUDIO Firebase SQL Connect (PostgreSQL) 스키마 정의
+# [보안] Quote의 의뢰인 성함, 연락처, 요청사항은 AES-GCM 암호화 문자열로 저장됩니다.
+# ============================================================================
+
+type Quote @table(key: "id") {
+  id: String!
+  clientNameEnc: String!
+  clientContactEnc: String!
+  clientMemoEnc: String
+  planName: String!
+  featureNames: [String!]!
+  scheduleName: String!
+  totalPrice: Int!
+  totalDays: Int!
+  status: String! @default(value: "접수대기")
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type Portfolio @table(key: "id") {
+  id: String!
+  name: String!
+  category: String!
+  url: String!
+  displayUrl: String
+  thumbnail: String
+  description: String
+  matchedPlanId: String
+  sortOrder: Int! @default(value: 0)
+}
+
+type QuotePlan @table(key: "id") {
+  id: String!
+  name: String!
+  subtitle: String
+  price: Int!
+  days: Int!
+  sortOrder: Int! @default(value: 0)
+}
+
+type QuoteFeature @table(key: "id") {
+  id: String!
+  name: String!
+  description: String
+  price: Int!
+  days: Int!
+  sortOrder: Int! @default(value: 0)
+}
+
+type EventConfig @table(key: "id") {
+  id: Int!
+  isHalfPriceActive: Boolean! @default(value: false)
+  title: String!
+  subtitle: String!
+  updatedAt: Timestamp! @default(expr: "request.time")
+}

@@ -1,0 +1,129 @@
+# ============================================================================
+# NEX.STUDIO 데이터 생성·수정·삭제 뮤테이션 (Mutations)
+# ============================================================================
+
+# 1. 견적 문의 등록 (개인정보는 암호화되어 전달됨)
+mutation CreateQuote(
+  $id: String!
+  $clientNameEnc: String!
+  $clientContactEnc: String!
+  $clientMemoEnc: String
+  $planName: String!
+  $featureNames: [String!]!
+  $scheduleName: String!
+  $totalPrice: Int!
+  $totalDays: Int!
+) @auth(level: PUBLIC) {
+  quote_insert(
+    data: {
+      id: $id
+      clientNameEnc: $clientNameEnc
+      clientContactEnc: $clientContactEnc
+      clientMemoEnc: $clientMemoEnc
+      planName: $planName
+      featureNames: $featureNames
+      scheduleName: $scheduleName
+      totalPrice: $totalPrice
+      totalDays: $totalDays
+      status: "접수대기"
+    }
+  )
+}
+
+# 2. 견적 상태 변경
+mutation UpdateQuoteStatus($id: String!, $status: String!) @auth(level: PUBLIC) {
+  quote_update(key: { id: $id }, data: { status: $status })
+}
+
+# 3. 견적 삭제
+mutation DeleteQuote($id: String!) @auth(level: PUBLIC) {
+  quote_delete(key: { id: $id })
+}
+
+# 4. 포트폴리오 추가/수정 및 삭제
+mutation UpsertPortfolio(
+  $id: String!
+  $name: String!
+  $category: String!
+  $url: String!
+  $displayUrl: String
+  $thumbnail: String
+  $description: String
+  $matchedPlanId: String
+  $sortOrder: Int!
+) @auth(level: PUBLIC) {
+  portfolio_upsert(
+    data: {
+      id: $id
+      name: $name
+      category: $category
+      url: $url
+      displayUrl: $displayUrl
+      thumbnail: $thumbnail
+      description: $description
+      matchedPlanId: $matchedPlanId
+      sortOrder: $sortOrder
+    }
+  )
+}
+
+mutation DeletePortfolio($id: String!) @auth(level: PUBLIC) {
+  portfolio_delete(key: { id: $id })
+}
+
+# 5. 견적 기본 유형 / 추가 기능 단가 수정
+mutation UpsertQuotePlan(
+  $id: String!
+  $name: String!
+  $subtitle: String
+  $price: Int!
+  $days: Int!
+  $sortOrder: Int!
+) @auth(level: PUBLIC) {
+  quotePlan_upsert(
+    data: {
+      id: $id
+      name: $name
+      subtitle: $subtitle
+      price: $price
+      days: $days
+      sortOrder: $sortOrder
+    }
+  )
+}
+
+mutation UpsertQuoteFeature(
+  $id: String!
+  $name: String!
+  $description: String
+  $price: Int!
+  $days: Int!
+  $sortOrder: Int!
+) @auth(level: PUBLIC) {
+  quoteFeature_upsert(
+    data: {
+      id: $id
+      name: $name
+      description: $description
+      price: $price
+      days: $days
+      sortOrder: $sortOrder
+    }
+  )
+}
+
+# 6. 반값 할인 이벤트 설정 저장
+mutation UpsertEventConfig(
+  $isHalfPriceActive: Boolean!
+  $title: String!
+  $subtitle: String!
+) @auth(level: PUBLIC) {
+  eventConfig_upsert(
+    data: {
+      id: 1
+      isHalfPriceActive: $isHalfPriceActive
+      title: $title
+      subtitle: $subtitle
+    }
+  )
+}

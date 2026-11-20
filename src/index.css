@@ -256,13 +256,22 @@ button {
 }
 
 .nav-logo-badge {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 9px;
-  background: var(--gradient-primary);
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 14px rgba(6, 182, 212, 0.25);
   display: grid;
   place-items: center;
-  color: #fff;
+  flex-shrink: 0;
+}
+
+.nav-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .nav-links {
@@ -286,6 +295,119 @@ button {
   padding: 9px 18px;
   font-size: 0.88rem;
   border-radius: 10px;
+}
+
+/* 로그인 후 프로필 아이콘 & 드롭다운 메뉴 */
+.nav-user-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-avatar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: all 0.2s;
+}
+
+.nav-avatar-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--accent-cyan);
+}
+
+.nav-avatar-img,
+.nav-avatar-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: grid;
+  place-items: center;
+}
+
+.nav-avatar-icon {
+  background: var(--gradient-primary);
+  color: #fff;
+}
+
+.nav-avatar-chevron {
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+.nav-avatar-chevron.open {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 230px;
+  padding: 8px;
+  border-radius: 16px;
+  background: #101524;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+  z-index: 60;
+}
+
+.nav-dropdown-header {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-dropdown-header strong {
+  font-size: 0.94rem;
+  color: var(--text-primary);
+}
+
+.nav-dropdown-header span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 6px 4px;
+}
+
+.nav-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-primary);
+}
+
+.nav-dropdown-item.danger {
+  color: #f87171;
+}
+
+.nav-dropdown-item.danger:hover {
+  background: rgba(239, 68, 68, 0.14);
+  color: #fca5a5;
 }
 
 /* ==========================================================================
@@ -858,12 +980,12 @@ button {
 }
 
 .viewer-info-bar {
-  padding: 16px 22px;
+  padding: 18px 22px;
   margin-bottom: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 18px;
   flex-wrap: wrap;
 }
 
@@ -871,9 +993,31 @@ button {
   transform: none;
 }
 
+.viewer-info-left {
+  flex: 1;
+  min-width: 260px;
+}
+
 .viewer-site-desc {
   font-size: 0.94rem;
   color: var(--text-secondary);
+}
+
+.viewer-tech-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.viewer-tech-badge {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.28);
+  color: #67e8f9;
 }
 
 .viewer-info-actions {
@@ -920,6 +1064,30 @@ button {
   white-space: nowrap;
 }
 
+.toolbar-right-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-action-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  place-items: center;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.toolbar-action-btn:hover {
+  background: rgba(99, 102, 241, 0.22);
+  border-color: rgba(99, 102, 241, 0.45);
+  color: #fff;
+}
+
 .device-switcher {
   display: flex;
   gap: 4px;
@@ -957,7 +1125,7 @@ button {
 }
 
 .browser-iframe {
-  height: 540px;
+  height: 640px;
   border: none;
   background: #fff;
   transition: width 0.3s ease;
@@ -1673,6 +1841,417 @@ button {
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+/* ==========================================================================
+   로그인 / 회원가입 & 내 정보 페이지 (LoginPage, ProfilePage)
+   ========================================================================== */
+.auth-section {
+  min-height: calc(100vh - 180px);
+  display: grid;
+  place-items: center;
+  padding: 60px 0;
+}
+
+.auth-card {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 34px 30px;
+}
+
+.auth-card:hover,
+.profile-card:hover {
+  transform: none;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auth-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px;
+  border-radius: 9px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.auth-tab.active {
+  background: rgba(99, 102, 241, 0.22);
+  color: #fff;
+}
+
+.auth-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.auth-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 22px;
+}
+
+.btn-google {
+  width: 100%;
+  background: #ffffff;
+  color: #1f2937;
+  font-weight: 700;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-google:hover {
+  background: #f3f4f6;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon svg {
+  position: absolute;
+  left: 13px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.input-with-icon input {
+  padding-left: 38px !important;
+}
+
+.auth-back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 18px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+}
+
+.auth-back-link:hover {
+  color: #fff;
+}
+
+/* 내 정보 페이지 */
+.profile-card {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 34px 32px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 26px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.profile-avatar-img,
+.profile-avatar-fallback {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(99, 102, 241, 0.45);
+  flex-shrink: 0;
+}
+
+.profile-avatar-fallback {
+  background: rgba(99, 102, 241, 0.16);
+  color: #a5b4fc;
+  display: grid;
+  place-items: center;
+}
+
+.profile-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.profile-email {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.profile-info-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.profile-info-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.profile-info-item strong {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+}
+
+.profile-edit-form {
+  margin-bottom: 24px;
+}
+
+.profile-saved-msg {
+  color: #34d399;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .profile-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   푸터 사업자 정보 & 법적 고지 페이지 (Footer, LegalPage)
+   ========================================================================== */
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.footer-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.footer-legal-links button {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.footer-legal-links button:hover {
+  color: var(--text-primary);
+}
+
+.footer-privacy-link {
+  color: var(--text-primary) !important;
+  font-weight: 700;
+}
+
+.footer-business-info {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.footer-business-info p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+}
+
+.legal-section {
+  min-height: calc(100vh - 200px);
+  padding: 56px 0 80px;
+}
+
+.legal-container {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.legal-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.legal-card {
+  padding: 36px 34px;
+}
+
+.legal-card:hover {
+  transform: none;
+}
+
+.legal-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 22px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.legal-title {
+  font-size: clamp(1.4rem, 2.8vw, 1.85rem);
+  font-weight: 800;
+}
+
+.legal-subtitle {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.legal-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.legal-toc-chip {
+  font-size: 0.78rem;
+  padding: 5px 11px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+
+.legal-toc-chip:hover {
+  background: rgba(99, 102, 241, 0.18);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #fff;
+}
+
+.legal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.legal-block {
+  scroll-margin-top: 90px;
+}
+
+.legal-block h3 {
+  font-size: 1.06rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.legal-block p {
+  font-size: 0.94rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.legal-table-wrap {
+  margin-top: 14px;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  text-align: left;
+}
+
+.legal-table th {
+  background: rgba(99, 102, 241, 0.14);
+  color: var(--text-primary);
+  font-weight: 700;
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legal-table td {
+  padding: 11px 14px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.legal-table tr:last-child td {
+  border-bottom: none;
+}
+
+.legal-footer-actions {
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 /* ==========================================================================

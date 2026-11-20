@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "nex-studio-sql"
+location: "asia-northeast3"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "nex_studio_db"
+      cloudSql:
+        instanceId: "nex-studio-instance"
+      schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

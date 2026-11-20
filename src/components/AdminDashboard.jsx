@@ -19,6 +19,7 @@ const STATUS_OPTIONS = ['접수대기', '상담중', '견적발송', '계약완�
 
 export default function AdminDashboard({
   isAuthenticated,
+  isFirebaseEnabled,
   onLoginSuccess,
   onLogout,
   onExitAdmin,
@@ -170,6 +171,14 @@ export default function AdminDashboard({
           <div>
             <span className="section-eyebrow">Admin Dashboard</span>
             <h1 className="admin-title">NEX.STUDIO 통합 관리자</h1>
+            <span
+              className={`event-status-pill ${isFirebaseEnabled ? 'on' : 'off'}`}
+              style={{ display: 'inline-block', marginTop: '8px' }}
+            >
+              {isFirebaseEnabled
+                ? '● Firebase SQL Connect 연결됨'
+                : '○ 로컬 저장소 모드 (.env.local 설정 시 Firebase SQL Connect 자동 연결)'}
+            </span>
           </div>
           <div className="admin-top-actions">
             <button type="button" onClick={onExitAdmin} className="btn btn-glass btn-sm">

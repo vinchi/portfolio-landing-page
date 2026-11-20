@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EDU.CAMPUS — 실무 교육 & 온라인 클래스 플랫폼</title>
+    <title>EDU.CAMPUS — 실무 교육 & 인터랙티브 LMS 학습 플랫폼</title>
     <link
       rel="stylesheet"
       as="style"
@@ -14,164 +14,451 @@
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body {
         font-family: 'Pretendard', -apple-system, sans-serif;
-        background: #0f172a; color: #f8fafc; line-height: 1.6;
+        background: #0b1120; color: #f8fafc; line-height: 1.6;
       }
-      button { font-family: inherit; cursor: pointer; }
-      .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+      button, input, textarea { font-family: inherit; }
+      button { cursor: pointer; }
+      .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
       header {
         position: sticky; top: 0; z-index: 30;
-        background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px);
+        background: rgba(11, 17, 32, 0.92); backdrop-filter: blur(12px);
         border-bottom: 1px solid rgba(255,255,255,0.08);
       }
-      .nav-inner { height: 68px; display: flex; justify-content: space-between; align-items: center; }
-      .logo { font-weight: 800; color: #34d399; font-size: 1.15rem; }
-      .my-btn {
-        background: rgba(52, 211, 153, 0.14); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3);
-        padding: 8px 16px; border-radius: 999px; font-weight: 600; font-size: 0.86rem;
+      .nav-inner { height: 70px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      .logo { font-weight: 800; color: #34d399; font-size: 1.18rem; }
+      .view-switch { display: flex; gap: 8px; }
+      .nav-btn {
+        padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14);
+        background: #172033; color: #cbd5e1; font-weight: 600; font-size: 0.86rem;
       }
+      .nav-btn.active { background: #10b981; color: #052e16; border-color: #10b981; font-weight: 700; }
 
       .hero {
-        padding: 60px 0 44px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 36px; align-items: center;
+        padding: 56px 0 40px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 36px; align-items: center;
       }
       .badge {
         display: inline-block; background: rgba(52, 211, 153, 0.14); color: #34d399;
         padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; margin-bottom: 14px; font-weight: 600;
       }
-      h1 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); line-height: 1.28; margin-bottom: 14px; }
-      .hero p { color: #94a3b8; font-size: 1rem; }
+      h1 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); line-height: 1.26; margin-bottom: 14px; }
+      .hero p { color: #94a3b8; font-size: 1rem; margin-bottom: 22px; }
       .hero-photo {
         width: 100%; border-radius: 18px; object-fit: cover; aspect-ratio: 16 / 10;
         border: 1px solid rgba(255,255,255,0.1);
       }
 
-      .filters { display: flex; gap: 10px; margin: 24px 0; flex-wrap: wrap; }
+      .toolbar { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin: 20px 0 24px; }
+      .filters { display: flex; gap: 8px; flex-wrap: wrap; }
       .f-btn {
-        padding: 8px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14);
-        background: #1e293b; color: #94a3b8; font-weight: 600; font-size: 0.86rem;
+        padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14);
+        background: #172033; color: #94a3b8; font-weight: 600; font-size: 0.84rem;
       }
-      .f-btn.active { background: #10b981; color: #064e3b; border-color: #10b981; }
+      .f-btn.active { background: #10b981; color: #052e16; border-color: #10b981; }
+      .search-dark {
+        padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.16);
+        background: #172033; color: #fff; font-size: 0.85rem; width: 220px;
+      }
 
-      .courses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding-bottom: 60px; }
+      .courses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding-bottom: 68px; }
       .course-card {
-        background: #1e293b; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
-        padding: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
+        background: #172033; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
+        padding: 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
       }
       .level { font-size: 0.76rem; color: #38bdf8; font-weight: 700; display: block; margin-bottom: 6px; }
-      .course-card h3 { font-size: 1.08rem; margin-bottom: 8px; }
-      .course-card p { font-size: 0.88rem; color: #94a3b8; }
+      .course-card h3 { font-size: 1.06rem; margin-bottom: 8px; }
+      .course-card p { font-size: 0.87rem; color: #94a3b8; }
       .price { font-weight: 800; color: #34d399; font-size: 1.05rem; margin-bottom: 10px; }
       .enroll-btn {
         width: 100%; padding: 10px; border-radius: 10px; border: none;
-        background: #10b981; color: #064e3b; font-weight: 700;
+        background: #10b981; color: #052e16; font-weight: 700; font-size: 0.88rem;
       }
+      .enroll-btn.secondary { background: rgba(56,189,248,0.16); color: #38bdf8; border: 1px solid rgba(56,189,248,0.35); }
+
+      /* LMS 강의실 뷰 */
+      .lms-layout { display: grid; grid-template-columns: 1.4fr 0.85fr; gap: 22px; padding: 36px 0 70px; }
+      .player-box {
+        background: #04070f; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
+        overflow: hidden; margin-bottom: 18px;
+      }
+      .player-screen {
+        position: relative; height: 270px; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; text-align: center; padding: 24px;
+        background: radial-gradient(circle at 50% 30%, rgba(16,185,129,0.2), #04070f 70%);
+      }
+      .player-controls {
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        padding: 12px 18px; background: #111827; border-top: 1px solid rgba(255,255,255,0.08);
+      }
+      .speed-btn {
+        padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15);
+        background: none; color: #cbd5e1; font-size: 0.78rem;
+      }
+      .speed-btn.active { background: #10b981; color: #052e16; border-color: #10b981; font-weight: 700; }
+
+      .lms-panel { background: #172033; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; }
+      .prog-bar { height: 9px; border-radius: 999px; background: rgba(255,255,255,0.1); overflow: hidden; margin: 10px 0 14px; }
+      .prog-fill { height: 100%; background: linear-gradient(90deg, #10b981, #38bdf8); transition: width 0.25s; }
+      .lesson-row {
+        display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px;
+        background: rgba(0,0,0,0.22); margin-bottom: 8px; cursor: pointer; font-size: 0.88rem;
+      }
+      .lesson-row.active { border: 1px solid #10b981; background: rgba(16,185,129,0.1); }
+      .note-area {
+        width: 100%; padding: 12px; border-radius: 10px; background: #0b1120;
+        border: 1px solid rgba(255,255,255,0.14); color: #fff; font-size: 0.88rem; margin-top: 10px;
+      }
+      .qa-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.86rem; }
 
       .modal-bg {
-        position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.72);
+        position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.75);
         display: none; place-items: center; padding: 20px;
       }
       .modal-bg.open { display: grid; }
       .modal {
-        width: 100%; max-width: 480px; background: #1e293b; border: 1px solid rgba(255,255,255,0.14);
+        width: 100%; max-width: 500px; background: #172033; border: 1px solid rgba(255,255,255,0.16);
         border-radius: 18px; padding: 28px;
       }
-      .curriculum { list-style: none; margin: 16px 0 22px; display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem; color: #cbd5e1; }
+      .cert-box {
+        border: 2px solid #34d399; border-radius: 14px; padding: 24px; text-align: center;
+        background: linear-gradient(145deg, rgba(16,185,129,0.1), rgba(56,189,248,0.08));
+      }
+      .toast-wrap { position: fixed; right: 20px; bottom: 20px; z-index: 120; display: flex; flex-direction: column; gap: 8px; }
+      .toast { background: #172033; border: 1px solid #34d399; color: #fff; padding: 11px 16px; border-radius: 10px; font-size: 0.86rem; }
 
-      footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 36px 0; text-align: center; color: #64748b; font-size: 0.88rem; }
-      @media (max-width: 800px) { .hero, .courses { grid-template-columns: 1fr; } }
+      footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 34px 0; text-align: center; color: #64748b; font-size: 0.88rem; }
+      @media (max-width: 860px) { .hero, .courses, .lms-layout { grid-template-columns: 1fr; } }
     </style>
   </head>
   <body>
     <header>
       <div class="container nav-inner">
         <div class="logo">EDU.CAMPUS</div>
-        <button class="my-btn" id="my-count" onclick="alert('현재 신청한 강의: ' + enrolled.length + '개\n' + (enrolled.join(', ') || '아직 없음'))">
-          내 강의실 (0)
-        </button>
+        <div class="view-switch">
+          <button class="nav-btn active" id="tab-catalog" onclick="switchMode('catalog')">강의 카탈로그</button>
+          <button class="nav-btn" id="tab-lms" onclick="switchMode('lms')">내 강의실 (1)</button>
+        </div>
       </div>
     </header>
 
-    <section class="container hero">
-      <div>
-        <span class="badge">실무 중심 온라인 클래스 플랫폼</span>
-        <h1>현업 전문가에게 배우는<br />가장 빠른 실무 스킬업</h1>
-        <p>난이도별 강의 필터링, 커리큘럼 미리보기 및 실시간 수강 신청 기능을 체험해 보세요.</p>
-      </div>
-      <img src="/images/demo-education.jpg" alt="온라인 학습 워크스페이스" class="hero-photo" />
-    </section>
+    <!-- 1. 카탈로그 뷰 -->
+    <div id="catalog-view">
+      <section class="container hero">
+        <div>
+          <span class="badge">실무 중심 온라인 클래스 & LMS</span>
+          <h1>현업 전문가에게 배우는<br />가장 빠른 실무 스킬업</h1>
+          <p>
+            커리큘럼 탐색 후 수강 신청을 누르면 즉시 [내 강의실]이 열려 레슨 완료 체크, 진도율 계산,
+            자동저장 강의노트 및 수료증 발급까지 체험할 수 있습니다.
+          </p>
+          <button class="nav-btn active" onclick="switchMode('lms')">내 강의실 바로 체험하기 →</button>
+        </div>
+        <img src="/images/demo-education.jpg" alt="온라인 학습 워크스페이스" class="hero-photo" />
+      </section>
 
-    <section class="container">
-      <div class="filters">
-        <button class="f-btn active" onclick="filterLevel('all', this)">전체 강의</button>
-        <button class="f-btn" onclick="filterLevel('beginner', this)">입문</button>
-        <button class="f-btn" onclick="filterLevel('practice', this)">실무</button>
-        <button class="f-btn" onclick="filterLevel('advanced', this)">심화</button>
+      <section class="container">
+        <div class="toolbar">
+          <div class="filters">
+            <button class="f-btn active" onclick="filterLevel('all', this)">전체 (6)</button>
+            <button class="f-btn" onclick="filterLevel('입문', this)">입문</button>
+            <button class="f-btn" onclick="filterLevel('실무', this)">실무</button>
+            <button class="f-btn" onclick="filterLevel('심화', this)">심화</button>
+          </div>
+          <input type="text" class="search-dark" placeholder="강의명 검색..." oninput="searchCourse(this.value)" />
+        </div>
+        <div class="courses" id="course-grid"></div>
+      </section>
+    </div>
+
+    <!-- 2. 내 강의실 (LMS) 뷰 -->
+    <div id="lms-view" style="display:none;">
+      <div class="container lms-layout">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+            <select id="lms-course-select" class="search-dark" style="width:auto;" onchange="selectLmsCourse(Number(this.value))"></select>
+            <button class="nav-btn" id="cert-btn" onclick="openCertModal()">수료증 발급받기</button>
+          </div>
+
+          <div class="player-box">
+            <div class="player-screen">
+              <span class="badge" id="p-lesson-tag">LESSON 1</span>
+              <h2 id="p-lesson-title" style="margin-bottom:8px;"></h2>
+              <p id="p-timer" style="font-family:monospace; color:#34d399; font-size:1.1rem;">00:00 / 12:40</p>
+            </div>
+            <div class="player-controls">
+              <button class="nav-btn active" id="play-toggle" onclick="togglePlay()">▶ 재생하기</button>
+              <div style="display:flex; gap:6px; align-items:center;">
+                <span style="font-size:0.78rem; color:#94a3b8;">배속:</span>
+                <button class="speed-btn active" onclick="setSpeed(this)">1.0x</button>
+                <button class="speed-btn" onclick="setSpeed(this)">1.25x</button>
+                <button class="speed-btn" onclick="setSpeed(this)">1.5x</button>
+                <button class="speed-btn" onclick="setSpeed(this)">2.0x</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="lms-panel">
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+              <button class="f-btn active" id="subtab-note" onclick="switchSubTab('note')">강의 노트 (자동저장)</button>
+              <button class="f-btn" id="subtab-qa" onclick="switchSubTab('qa')">Q&A 질문 (<span id="qa-cnt">1</span>)</button>
+            </div>
+            <div id="panel-note">
+              <textarea id="note-input" class="note-area" rows="4" placeholder="이 레슨에서 배운 핵심 내용을 메모해 보세요 (자동 저장됨)..." oninput="saveNote()"></textarea>
+            </div>
+            <div id="panel-qa" style="display:none;">
+              <form onsubmit="addQuestion(event)" style="display:flex; gap:8px; margin-bottom:10px;">
+                <input type="text" id="qa-input" class="search-dark" style="flex:1;" placeholder="강사에게 질문 남기기..." required />
+                <button type="submit" class="nav-btn active">등록</button>
+              </form>
+              <div id="qa-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="lms-panel" style="height:fit-content;">
+          <h3>수강 진도율</h3>
+          <div style="display:flex; justify-content:space-between; font-size:0.86rem; color:#94a3b8; margin-top:6px;">
+            <span>완료 레슨</span>
+            <strong style="color:#34d399;" id="prog-text">0%</strong>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%;"></div></div>
+          <p style="font-size:0.78rem; color:#94a3b8; margin-bottom:14px;">* 체크박스를 모두 완료하면 수료증이 활성화됩니다.</p>
+          <div id="lesson-list"></div>
+        </aside>
       </div>
-      <div class="courses" id="course-grid"></div>
-    </section>
+    </div>
 
     <footer>
-      <div class="container">© 2026 EDU.CAMPUS — 포트폴리오 #5 교육·클래스 플랫폼 데모 사이트</div>
+      <div class="container">© 2026 EDU.CAMPUS — 포트폴리오 #5 교육·LMS 플랫폼 데모</div>
     </footer>
 
-    <div class="modal-bg" id="course-modal" onclick="closeCourseModal()">
+    <!-- 커리큘럼 모달 -->
+    <div class="modal-bg" id="course-modal" onclick="this.classList.remove('open')">
       <div class="modal" onclick="event.stopPropagation()">
         <span class="level" id="m-level"></span>
-        <h3 id="m-title" style="font-size:1.3rem;"></h3>
-        <ul class="curriculum" id="m-curr"></ul>
+        <h3 id="m-title" style="font-size:1.3rem; margin-bottom:12px;"></h3>
+        <div id="m-curr" style="display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:#cbd5e1; margin-bottom:20px;"></div>
         <div style="display:flex; gap:10px;">
-          <button class="f-btn" style="flex:1" onclick="closeCourseModal()">닫기</button>
-          <button class="enroll-btn" style="flex:2" onclick="confirmEnroll()">수강 신청하기</button>
+          <button class="f-btn" style="flex:1;" onclick="document.getElementById('course-modal').classList.remove('open')">닫기</button>
+          <button class="enroll-btn" style="flex:2;" onclick="confirmEnroll()">수강 신청 & 학습 시작</button>
         </div>
       </div>
     </div>
 
+    <!-- 수료증 모달 -->
+    <div class="modal-bg" id="cert-modal" onclick="this.classList.remove('open')">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="cert-box">
+          <span style="font-size:0.78rem; color:#34d399; letter-spacing:0.1em;">CERTIFICATE OF COMPLETION</span>
+          <h2 style="margin:10px 0 6px;">EDU.CAMPUS 수료증</h2>
+          <p style="font-size:0.9rem; color:#cbd5e1; margin-bottom:16px;">위 수강생은 본 교육 과정을 100% 성실히 완수하였음을 증명합니다.</p>
+          <div style="margin-bottom:12px;"><strong style="font-size:1.15rem;" id="cert-course"></strong></div>
+          <div style="font-size:0.84rem; color:#94a3b8;" id="cert-date"></div>
+        </div>
+        <button class="enroll-btn" style="margin-top:16px;" onclick="document.getElementById('cert-modal').classList.remove('open')">확인</button>
+      </div>
+    </div>
+
+    <div class="toast-wrap" id="toast-wrap"></div>
+
     <script>
       const courses = [
-        { id: 1, level: 'beginner', levelText: '입문 · 4주 완성', title: '비전공자를 위한 웹 개발 첫걸음', desc: 'HTML, CSS부터 나만의 포트폴리오 사이트 배포까지 단계별로 배웁니다.', price: '190,000원', curr: ['1주차: 웹 구조와 HTML5 핵심', '2주차: 모던 CSS 레이아웃과 반응형', '3주차: JavaScript 인터랙션 기초', '4주차: GitHub Pages 무료 배포'] },
-        { id: 2, level: 'practice', levelText: '실무 · 6주 완성', title: 'AI 활용 업무 자동화 마스터', desc: '반복 업무를 80% 줄이는 실전 프롬프트와 노코드 자동화 워크플로우.', price: '280,000원', curr: ['1~2주차: 업무용 프롬프트 엔지니어링', '3~4주차: API 연동 및 자동 리포팅', '5~6주차: 사내 챗봇 & 대시보드 구축'] },
-        { id: 3, level: 'advanced', levelText: '심화 · 8주 완성', title: 'React 풀스택 프로덕트 런칭', desc: '실제 결제와 데이터베이스가 연결된 나만의 SaaS 서비스를 완성합니다.', price: '420,000원', curr: ['1~3주차: React 상태관리 및 아키텍처', '4~6주차: Supabase DB & 보안 인증', '7~8주차: PG 결제 연동 및 실서비스 배포'] },
+        { id: 1, level: '입문', tag: '입문 · 4주 완성', title: '비전공자를 위한 웹 개발 첫걸음', desc: 'HTML, CSS부터 나만의 포트폴리오 사이트 배포까지 단계별로 배웁니다.', price: '190,000원', lessons: ['1강. 웹 동작 원리와 HTML5 구조', '2강. 모던 CSS Flex/Grid 레이아웃', '3강. JavaScript DOM 인터랙션', '4강. Firebase 무료 호스팅 배포'] },
+        { id: 2, level: '실무', tag: '실무 · 6주 완성', title: 'AI 활용 업무 자동화 마스터', desc: '반복 업무를 80% 줄이는 실전 프롬프트와 노코드 워크플로우.', price: '280,000원', lessons: ['1강. 업무용 프롬프트 엔지니어링', '2강. Webhook과 REST API 연결', '3강. Slack·Notion 자동 리포팅', '4강. 사내 AI 챗봇 프로토타입'] },
+        { id: 3, level: '심화', tag: '심화 · 8주 완성', title: 'React 풀스택 프로덕트 런칭', desc: '결제와 데이터베이스가 연결된 나만의 SaaS 서비스를 완성합니다.', price: '420,000원', lessons: ['1강. React 컴포넌트와 상태 설계', '2강. PostgreSQL 스키마 모델링', '3강. 소셜 로그인과 보안 인증', '4강. PG 결제 및 실서비스 운영'] },
+        { id: 4, level: '입문', tag: '입문 · 3주 완성', title: 'Figma UI/UX 실무 디자인 기초', desc: '개발자가 바로 구현할 수 있는 디자인 시스템과 오토레이아웃.', price: '160,000원', lessons: ['1강. 오토레이아웃 핵심 마스터', '2강. 컬러·타이포 디자인 토큰', '3강. 프로토타이핑과 핸드오프'] },
+        { id: 5, level: '실무', tag: '실무 · 5주 완성', title: 'GA4 & 전환율 최적화(CRO) 실전', desc: '데이터로 랜딩 페이지 이탈을 잡고 구매 전환율을 2배 높입니다.', price: '240,000원', lessons: ['1강. GA4 이벤트 설계', '2강. 퍼널 분석과 히트맵 해석', '3강. A/B 테스트 실험 설계'] },
+        { id: 6, level: '심화', tag: '심화 · 6주 완성', title: '데이터 시각화 & 대시보드 아키텍처', desc: 'SVG 차트와 대용량 테이블 렌더링 성능을 극대화합니다.', price: '360,000원', lessons: ['1강. SVG 기반 커스텀 차트 구현', '2강. 가상 스크롤과 메모이제이션', '3강. 실시간 스트리밍 데이터 처리'] },
       ];
+
       let activeLevel = 'all';
-      let selectedCourse = null;
-      let enrolled = [];
+      let keyword = '';
+      let enrolledIds = JSON.parse(localStorage.getItem('edu_enrolled_v2') || '[1]');
+      let doneMap = JSON.parse(localStorage.getItem('edu_done_v2') || '{}');
+      let notesMap = JSON.parse(localStorage.getItem('edu_notes_v2') || '{}');
+      let qas = JSON.parse(localStorage.getItem('edu_qas_v2') || '["실습 코드는 GitHub에서 받을 수 있나요?"]');
+
+      let modalCourseId = null;
+      let lmsCourseId = enrolledIds[0] || 1;
+      let lmsLessonIdx = 0;
+      let playing = false;
+      let seconds = 0;
+      let playTimer = null;
+
+      function escapeHtml(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+      function showToast(msg) {
+        const wrap = document.getElementById('toast-wrap');
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.textContent = msg;
+        wrap.appendChild(el);
+        setTimeout(() => el.remove(), 2600);
+      }
+
+      function switchMode(mode) {
+        document.getElementById('catalog-view').style.display = mode === 'catalog' ? 'block' : 'none';
+        document.getElementById('lms-view').style.display = mode === 'lms' ? 'block' : 'none';
+        document.getElementById('tab-catalog').classList.toggle('active', mode === 'catalog');
+        document.getElementById('tab-lms').classList.toggle('active', mode === 'lms');
+        if (mode === 'lms') renderLms();
+      }
 
       function renderCourses() {
-        const list = courses.filter(c => activeLevel === 'all' || c.level === activeLevel);
-        document.getElementById('course-grid').innerHTML = list.map(c => `
-          <article class="course-card">
-            <div>
-              <span class="level">${c.levelText}</span>
-              <h3>${c.title}</h3>
-              <p>${c.desc}</p>
-            </div>
-            <div>
-              <div class="price">${c.price}</div>
-              <button class="enroll-btn" onclick="openCourseModal(${c.id})">커리큘럼 & 수강신청</button>
-            </div>
-          </article>
-        `).join('');
+        const list = courses.filter(c =>
+          (activeLevel === 'all' || c.level === activeLevel) &&
+          c.title.toLowerCase().includes(keyword.toLowerCase())
+        );
+        document.getElementById('tab-lms').textContent = `내 강의실 (${enrolledIds.length})`;
+        document.getElementById('course-grid').innerHTML = list.map(c => {
+          const isEnrolled = enrolledIds.includes(c.id);
+          return `
+            <article class="course-card">
+              <div>
+                <span class="level">${c.tag}</span>
+                <h3>${escapeHtml(c.title)}</h3>
+                <p>${escapeHtml(c.desc)}</p>
+              </div>
+              <div>
+                <div class="price">${c.price}</div>
+                ${isEnrolled
+                  ? `<button class="enroll-btn secondary" onclick="enterCourse(${c.id})">수강 중 · 강의실 입장</button>`
+                  : `<button class="enroll-btn" onclick="openCourseModal(${c.id})">커리큘럼 & 수강신청</button>`}
+              </div>
+            </article>
+          `;
+        }).join('');
       }
+
       function filterLevel(lvl, btn) {
         activeLevel = lvl;
-        document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.filters .f-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         renderCourses();
       }
+      function searchCourse(v) { keyword = v; renderCourses(); }
+
       function openCourseModal(id) {
-        selectedCourse = courses.find(c => c.id === id);
-        document.getElementById('m-level').textContent = selectedCourse.levelText;
-        document.getElementById('m-title').textContent = selectedCourse.title;
-        document.getElementById('m-curr').innerHTML = selectedCourse.curr.map(w => '<li>✓ ' + w + '</li>').join('');
+        modalCourseId = id;
+        const c = courses.find(x => x.id === id);
+        document.getElementById('m-level').textContent = c.tag;
+        document.getElementById('m-title').textContent = c.title;
+        document.getElementById('m-curr').innerHTML = c.lessons.map(l => `<div>✓ ${escapeHtml(l)}</div>`).join('');
         document.getElementById('course-modal').classList.add('open');
       }
-      function closeCourseModal() { document.getElementById('course-modal').classList.remove('open'); }
+
       function confirmEnroll() {
-        if (!enrolled.includes(selectedCourse.title)) enrolled.push(selectedCourse.title);
-        document.getElementById('my-count').textContent = '내 강의실 (' + enrolled.length + ')';
-        alert('[' + selectedCourse.title + '] 수강 신청이 완료되었습니다!');
-        closeCourseModal();
+        if (!enrolledIds.includes(modalCourseId)) enrolledIds.push(modalCourseId);
+        localStorage.setItem('edu_enrolled_v2', JSON.stringify(enrolledIds));
+        document.getElementById('course-modal').classList.remove('open');
+        renderCourses();
+        enterCourse(modalCourseId);
+        showToast('수강 신청이 완료되어 내 강의실로 이동했습니다.');
       }
+
+      function enterCourse(id) {
+        lmsCourseId = id;
+        lmsLessonIdx = 0;
+        switchMode('lms');
+      }
+
+      function renderLms() {
+        const select = document.getElementById('lms-course-select');
+        select.innerHTML = enrolledIds.map(id => {
+          const c = courses.find(x => x.id === id);
+          return `<option value="${c.id}" ${c.id === lmsCourseId ? 'selected' : ''}>${escapeHtml(c.title)}</option>`;
+        }).join('');
+
+        const c = courses.find(x => x.id === lmsCourseId) || courses[0];
+        const doneArr = doneMap[c.id] || [];
+        const pct = Math.round((doneArr.length / c.lessons.length) * 100);
+
+        document.getElementById('p-lesson-tag').textContent = `LESSON ${lmsLessonIdx + 1}`;
+        document.getElementById('p-lesson-title').textContent = c.lessons[lmsLessonIdx];
+        document.getElementById('prog-text').textContent = `${pct}% (${doneArr.length}/${c.lessons.length})`;
+        document.getElementById('prog-fill').style.width = `${pct}%`;
+
+        const certBtn = document.getElementById('cert-btn');
+        certBtn.disabled = pct < 100;
+        certBtn.className = pct === 100 ? 'nav-btn active' : 'nav-btn';
+        certBtn.textContent = pct === 100 ? '수료증 발급받기 ✓' : '수료증 (100% 달성 시)';
+
+        document.getElementById('lesson-list').innerHTML = c.lessons.map((l, idx) => {
+          const checked = doneArr.includes(idx);
+          return `
+            <div class="lesson-row ${idx === lmsLessonIdx ? 'active' : ''}" onclick="pickLesson(${idx})">
+              <input type="checkbox" ${checked ? 'checked' : ''} onclick="event.stopPropagation(); toggleLessonDone(${c.id}, ${idx})" />
+              <span>${escapeHtml(l)}</span>
+            </div>
+          `;
+        }).join('');
+
+        document.getElementById('note-input').value = notesMap[`${c.id}-${lmsLessonIdx}`] || '';
+        renderQas();
+      }
+
+      function selectLmsCourse(id) { lmsCourseId = id; lmsLessonIdx = 0; renderLms(); }
+      function pickLesson(idx) { lmsLessonIdx = idx; seconds = 0; renderLms(); }
+
+      function toggleLessonDone(cid, idx) {
+        const arr = doneMap[cid] || [];
+        doneMap[cid] = arr.includes(idx) ? arr.filter(i => i !== idx) : [...arr, idx];
+        localStorage.setItem('edu_done_v2', JSON.stringify(doneMap));
+        renderLms();
+      }
+
+      function togglePlay() {
+        playing = !playing;
+        document.getElementById('play-toggle').textContent = playing ? '⏸ 일시정지' : '▶ 재생하기';
+        if (playing) {
+          playTimer = setInterval(() => {
+            seconds += 1;
+            const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+            const s = String(seconds % 60).padStart(2, '0');
+            document.getElementById('p-timer').textContent = `${m}:${s} / 12:40`;
+          }, 1000);
+        } else {
+          clearInterval(playTimer);
+        }
+      }
+      function setSpeed(btn) {
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showToast(`재생 속도가 ${btn.textContent}로 변경되었습니다.`);
+      }
+
+      function switchSubTab(t) {
+        document.getElementById('panel-note').style.display = t === 'note' ? 'block' : 'none';
+        document.getElementById('panel-qa').style.display = t === 'qa' ? 'block' : 'none';
+        document.getElementById('subtab-note').classList.toggle('active', t === 'note');
+        document.getElementById('subtab-qa').classList.toggle('active', t === 'qa');
+      }
+      function saveNote() {
+        notesMap[`${lmsCourseId}-${lmsLessonIdx}`] = document.getElementById('note-input').value;
+        localStorage.setItem('edu_notes_v2', JSON.stringify(notesMap));
+      }
+      function renderQas() {
+        document.getElementById('qa-cnt').textContent = qas.length;
+        document.getElementById('qa-list').innerHTML = qas.map(q => `<div class="qa-item">Q. ${escapeHtml(q)}</div>`).join('');
+      }
+      function addQuestion(e) {
+        e.preventDefault();
+        const val = document.getElementById('qa-input').value.trim();
+        qas.unshift(val);
+        localStorage.setItem('edu_qas_v2', JSON.stringify(qas));
+        document.getElementById('qa-input').value = '';
+        renderQas();
+        showToast('질문이 등록되었습니다.');
+      }
+
+      function openCertModal() {
+        const c = courses.find(x => x.id === lmsCourseId);
+        document.getElementById('cert-course').textContent = c.title;
+        document.getElementById('cert-date').textContent = `발급일: ${new Date().toLocaleDateString('ko-KR')}`;
+        document.getElementById('cert-modal').classList.add('open');
+      }
+
       renderCourses();
     </script>
   </body>

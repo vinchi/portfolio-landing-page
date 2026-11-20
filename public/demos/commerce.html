@@ -14,101 +14,141 @@
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body {
         font-family: 'Pretendard', -apple-system, sans-serif;
-        background: #fafaf9;
-        color: #1c1917;
-        line-height: 1.55;
+        background: #fafaf9; color: #1c1917; line-height: 1.55;
       }
-      button { font-family: inherit; cursor: pointer; }
-      .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+      button, input, select { font-family: inherit; }
+      button { cursor: pointer; }
+      .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
       header {
         position: sticky; top: 0; z-index: 30;
-        background: rgba(255,255,255,0.92); backdrop-filter: blur(10px);
+        background: rgba(255,255,255,0.94); backdrop-filter: blur(10px);
         border-bottom: 1px solid #e7e5e4;
       }
-      .nav-inner { height: 70px; display: flex; justify-content: space-between; align-items: center; }
+      .nav-inner { height: 70px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
       .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 0.04em; }
-      .cart-btn {
-        background: #1c1917; color: #fff; border: none; padding: 9px 18px;
-        border-radius: 999px; font-size: 0.88rem; font-weight: 600;
+      .nav-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      .nav-pill {
+        background: #fff; color: #1c1917; border: 1px solid #d6d3d1; padding: 8px 14px;
+        border-radius: 999px; font-size: 0.84rem; font-weight: 600;
       }
+      .cart-btn { background: #1c1917; color: #fff; border-color: #1c1917; }
 
       .banner {
-        position: relative; height: 320px; overflow: hidden;
+        position: relative; height: 290px; overflow: hidden;
         display: flex; align-items: center; justify-content: center; text-align: center; color: #fff;
       }
       .banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-      .banner-overlay { position: absolute; inset: 0; background: rgba(28, 25, 23, 0.54); }
+      .banner-overlay { position: absolute; inset: 0; background: rgba(28, 25, 23, 0.56); }
       .banner-content { position: relative; z-index: 2; padding: 0 24px; }
-      .banner span { font-size: 0.82rem; color: #fde68a; letter-spacing: 0.06em; font-weight: 700; }
-      .banner h1 { font-size: clamp(1.7rem, 3.8vw, 2.5rem); margin: 10px 0 12px; }
-      .banner p { color: #e7e5e4; font-size: 0.98rem; }
+      .banner span { font-size: 0.8rem; color: #fde68a; letter-spacing: 0.08em; font-weight: 700; }
+      .banner h1 { font-size: clamp(1.65rem, 3.6vw, 2.4rem); margin: 8px 0 10px; }
 
       .toolbar {
         display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-        gap: 14px; padding: 36px 0 24px;
+        gap: 12px; padding: 32px 0 22px;
       }
       .cats { display: flex; gap: 8px; flex-wrap: wrap; }
       .cat-btn {
-        padding: 8px 16px; border-radius: 999px; border: 1px solid #d6d3d1;
-        background: #fff; color: #57534e; font-weight: 600; font-size: 0.86rem;
+        padding: 8px 15px; border-radius: 999px; border: 1px solid #d6d3d1;
+        background: #fff; color: #57534e; font-weight: 600; font-size: 0.84rem;
       }
       .cat-btn.active { background: #1c1917; color: #fff; border-color: #1c1917; }
-      .search-box {
-        padding: 9px 14px; border-radius: 999px; border: 1px solid #d6d3d1;
-        background: #fff; font-size: 0.88rem; width: 220px;
+      .right-tools { display: flex; gap: 8px; flex-wrap: wrap; }
+      .search-box, .sort-box {
+        padding: 8px 14px; border-radius: 999px; border: 1px solid #d6d3d1;
+        background: #fff; font-size: 0.85rem;
       }
 
-      .products {
-        display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; padding-bottom: 70px;
-      }
+      .products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding-bottom: 70px; }
       .item {
         background: #fff; border: 1px solid #e7e5e4; border-radius: 16px; overflow: hidden;
-        display: flex; flex-direction: column; justify-content: space-between;
+        display: flex; flex-direction: column; justify-content: space-between; position: relative;
       }
-      .thumb { height: 185px; overflow: hidden; background: #f5f5f4; }
+      .wish-btn {
+        position: absolute; top: 10px; right: 10px; z-index: 3; width: 34px; height: 34px;
+        border-radius: 50%; border: none; background: rgba(255,255,255,0.92); font-size: 1rem;
+      }
+      .thumb { height: 175px; overflow: hidden; background: #f5f5f4; cursor: pointer; }
       .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
       .item:hover .thumb img { transform: scale(1.04); }
-      .info { padding: 18px; }
-      .info small { font-size: 0.75rem; color: #78716c; }
-      .info h3 { font-size: 1rem; margin: 4px 0 6px; }
-      .price { font-weight: 800; color: #b45309; margin-bottom: 14px; font-size: 1.02rem; }
+      .info { padding: 16px; }
+      .info small { font-size: 0.74rem; color: #78716c; }
+      .info h3 { font-size: 0.96rem; margin: 4px 0 4px; cursor: pointer; }
+      .rating { font-size: 0.78rem; color: #d97706; margin-bottom: 6px; }
+      .price { font-weight: 800; color: #b45309; margin-bottom: 12px; font-size: 1rem; }
       .add-btn {
-        width: 100%; padding: 10px; border-radius: 9px; border: 1px solid #1c1917;
-        background: #fff; font-weight: 700; font-size: 0.88rem;
+        width: 100%; padding: 9px; border-radius: 9px; border: 1px solid #1c1917;
+        background: #fff; font-weight: 700; font-size: 0.84rem;
       }
       .add-btn:hover { background: #1c1917; color: #fff; }
 
-      /* 슬라이드 장바구니 드로어 */
+      /* 드로어 (장바구니 / 찜 / 주문내역) */
       .drawer-bg {
-        position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.5);
+        position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.52);
         display: none; justify-content: flex-end;
       }
       .drawer-bg.open { display: flex; }
       .drawer {
-        width: 100%; max-width: 390px; background: #fff; height: 100%; padding: 26px;
+        width: 100%; max-width: 410px; background: #fff; height: 100%; padding: 24px;
         display: flex; flex-direction: column; justify-content: space-between;
       }
-      .drawer-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #e7e5e4; }
-      .drawer-items { flex: 1; overflow-y: auto; padding: 16px 0; display: flex; flex-direction: column; gap: 14px; }
-      .cart-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #f5f5f4; }
-      .qty-ctrl { display: flex; align-items: center; gap: 8px; }
+      .drawer-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1px solid #e7e5e4; }
+      .drawer-items { flex: 1; overflow-y: auto; padding: 14px 0; display: flex; flex-direction: column; gap: 14px; }
+      .ship-box { background: #f5f5f4; padding: 12px; border-radius: 10px; font-size: 0.82rem; margin-top: 12px; }
+      .ship-bar { height: 7px; background: #e7e5e4; border-radius: 999px; overflow: hidden; margin-top: 6px; }
+      .ship-fill { height: 100%; background: #16a34a; transition: width 0.25s; }
+      .coupon-row { display: flex; gap: 6px; margin: 12px 0; }
+      .coupon-row input { flex: 1; padding: 8px 10px; border: 1px solid #d6d3d1; border-radius: 8px; font-size: 0.84rem; }
+      .qty-ctrl { display: flex; align-items: center; gap: 6px; }
       .qty-ctrl button { width: 26px; height: 26px; border-radius: 6px; border: 1px solid #d6d3d1; background: #fff; }
-      .drawer-foot { border-top: 1px solid #e7e5e4; padding-top: 16px; }
       .checkout-btn {
         width: 100%; padding: 13px; border-radius: 10px; border: none;
-        background: #1c1917; color: #fff; font-weight: 700; font-size: 0.95rem; margin-top: 12px;
+        background: #1c1917; color: #fff; font-weight: 700; font-size: 0.94rem; margin-top: 10px;
       }
 
+      /* 모달 (상품 상세 + 3단계 결제) */
+      .modal-bg {
+        position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.65);
+        display: none; place-items: center; padding: 20px;
+      }
+      .modal-bg.open { display: grid; }
+      .modal {
+        width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto;
+        background: #fff; border-radius: 18px; padding: 26px;
+      }
+      .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 20px; }
+      .detail-img { width: 100%; height: 240px; object-fit: cover; border-radius: 12px; }
+      .opt-pills { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 14px; }
+      .opt-pill {
+        padding: 6px 12px; border-radius: 8px; border: 1px solid #d6d3d1; background: #fff; font-size: 0.82rem;
+      }
+      .opt-pill.active { background: #1c1917; color: #fff; border-color: #1c1917; }
+      .review-box { border-top: 1px solid #e7e5e4; padding-top: 16px; }
+      .review-item { padding: 10px 0; border-bottom: 1px solid #f5f5f4; font-size: 0.86rem; }
+
+      .step-bar { display: flex; gap: 8px; margin-bottom: 18px; }
+      .step-dot { flex: 1; padding: 7px; text-align: center; border-radius: 8px; background: #f5f5f4; font-size: 0.8rem; font-weight: 700; color: #78716c; }
+      .step-dot.active { background: #1c1917; color: #fff; }
+      .form-input { width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid #d6d3d1; margin-bottom: 10px; font-size: 0.9rem; }
+
+      .toast-wrap { position: fixed; right: 20px; bottom: 20px; z-index: 120; display: flex; flex-direction: column; gap: 8px; }
+      .toast { background: #1c1917; color: #fff; padding: 11px 16px; border-radius: 10px; font-size: 0.86rem; }
+
       footer { border-top: 1px solid #e7e5e4; padding: 32px 0; text-align: center; color: #78716c; font-size: 0.88rem; }
-      @media (max-width: 780px) { .products { grid-template-columns: 1fr; } }
+      @media (max-width: 900px) { .products { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 580px) { .products, .detail-grid { grid-template-columns: 1fr; } }
     </style>
   </head>
   <body>
     <header>
       <div class="container nav-inner">
         <div class="logo">MAISON.SELECT</div>
-        <button class="cart-btn" id="cart-btn" onclick="openCart()">장바구니 (0)</button>
+        <div class="nav-actions">
+          <button class="nav-pill" id="wish-nav-btn" onclick="openSideDrawer('wish')">찜 (0)</button>
+          <button class="nav-pill" id="order-nav-btn" onclick="openSideDrawer('orders')">주문내역 (0)</button>
+          <button class="nav-pill cart-btn" id="cart-btn" onclick="openSideDrawer('cart')">장바구니 (0)</button>
+        </div>
       </div>
     </header>
 
@@ -116,78 +156,168 @@
       <img src="/images/demo-commerce.jpg" alt="메종 셀렉트 쇼룸" />
       <div class="banner-overlay"></div>
       <div class="banner-content">
-        <span>2026 WINTER COLLECTION</span>
-        <h1>일상에 온기를 더하는 라이프스타일 스토어</h1>
-        <p>카테고리 필터링과 실시간 장바구니 수량·결제 계산을 직접 체험해 보세요.</p>
+        <span>2026 WINTER COLLECTION · WELCOME10 (10% 쿠폰)</span>
+        <h1>일상에 온기를 더하는 라이프스타일 D2C 스토어</h1>
+        <p>상품 옵션·리뷰 작성, 무료배송 게이지, 쿠폰 할인 및 3단계 결제를 직접 체험해 보세요.</p>
       </div>
     </section>
 
     <div class="container">
       <div class="toolbar">
         <div class="cats">
-          <button class="cat-btn active" onclick="filterCat('all', this)">전체</button>
+          <button class="cat-btn active" onclick="filterCat('all', this)">전체 (8)</button>
           <button class="cat-btn" onclick="filterCat('furniture', this)">가구</button>
           <button class="cat-btn" onclick="filterCat('object', this)">오브제</button>
           <button class="cat-btn" onclick="filterCat('table', this)">테이블웨어</button>
+          <button class="cat-btn" onclick="filterCat('light', this)">조명</button>
         </div>
-        <input type="text" class="search-box" placeholder="상품명 검색..." oninput="searchProducts(this.value)" />
+        <div class="right-tools">
+          <select class="sort-box" onchange="setSort(this.value)">
+            <option value="popular">인기순</option>
+            <option value="low">낮은 가격순</option>
+            <option value="high">높은 가격순</option>
+          </select>
+          <input type="text" class="search-box" placeholder="상품명 검색..." oninput="searchProducts(this.value)" />
+        </div>
       </div>
 
       <section class="products" id="product-grid"></section>
     </div>
 
     <footer>
-      <div class="container">© 2026 MAISON.SELECT — 포트폴리오 #4 이커머스 쇼핑몰 데모 사이트</div>
+      <div class="container">© 2026 MAISON.SELECT — 포트폴리오 #4 D2C 이커머스 쇼핑몰 데모</div>
     </footer>
 
-    <!-- 장바구니 드로어 -->
-    <div class="drawer-bg" id="cart-drawer" onclick="closeCart()">
+    <!-- 사이드 드로어 (장바구니 / 찜 / 주문내역 공용) -->
+    <div class="drawer-bg" id="side-drawer" onclick="closeSideDrawer()">
       <div class="drawer" onclick="event.stopPropagation()">
         <div class="drawer-head">
-          <h3>장바구니</h3>
-          <button onclick="closeCart()" style="border:none; background:none; font-size:1.2rem;">✕</button>
+          <h3 id="drawer-title">장바구니</h3>
+          <button onclick="closeSideDrawer()" style="border:none; background:none; font-size:1.2rem;">✕</button>
         </div>
-        <div class="drawer-items" id="cart-items"></div>
-        <div class="drawer-foot">
-          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.05rem;">
-            <span>총 결제 예정 금액</span>
-            <span id="cart-total">0원</span>
+        <div id="drawer-top-extra"></div>
+        <div class="drawer-items" id="drawer-body"></div>
+        <div id="drawer-foot"></div>
+      </div>
+    </div>
+
+    <!-- 상품 상세 모달 -->
+    <div class="modal-bg" id="detail-modal" onclick="this.classList.remove('open')">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="detail-grid">
+          <img id="d-img" class="detail-img" alt="상품 이미지" />
+          <div>
+            <small id="d-cat" style="color:#78716c;"></small>
+            <h2 id="d-name" style="margin:4px 0 8px;"></h2>
+            <div class="price" id="d-price" style="font-size:1.25rem;"></div>
+            <p id="d-desc" style="font-size:0.88rem; color:#57534e; margin-bottom:12px;"></p>
+
+            <strong style="font-size:0.82rem;">소재 · 컬러 옵션</strong>
+            <div class="opt-pills" id="d-opts"></div>
+
+            <button class="checkout-btn" onclick="addDetailToCart()">옵션 선택 후 장바구니 담기</button>
           </div>
-          <button class="checkout-btn" onclick="checkout()">주문하기</button>
+        </div>
+
+        <div class="review-box">
+          <h4 style="margin-bottom:10px;">구매 고객 리뷰</h4>
+          <div id="d-reviews"></div>
+          <form onsubmit="submitReview(event)" style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+            <select id="r-star" class="sort-box">
+              <option value="5">★★★★★ (5점)</option>
+              <option value="4">★★★★☆ (4점)</option>
+            </select>
+            <input type="text" id="r-text" class="search-box" style="flex:1;" placeholder="상품 후기를 작성해 보세요..." required />
+            <button type="submit" class="nav-pill cart-btn">리뷰 등록</button>
+          </form>
         </div>
       </div>
     </div>
 
+    <!-- 3단계 체크아웃 모달 -->
+    <div class="modal-bg" id="checkout-modal" onclick="this.classList.remove('open')">
+      <div class="modal" style="max-width:480px;" onclick="event.stopPropagation()">
+        <h3 style="margin-bottom:14px;">안전 결제 체크아웃</h3>
+        <div class="step-bar">
+          <div class="step-dot active" id="cs-1">1. 배송지</div>
+          <div class="step-dot" id="cs-2">2. 결제수단</div>
+          <div class="step-dot" id="cs-3">3. 주문완료</div>
+        </div>
+        <div id="checkout-body"></div>
+      </div>
+    </div>
+
+    <div class="toast-wrap" id="toast-wrap"></div>
+
     <script>
       const catalog = [
-        { id: 1, cat: 'furniture', catLabel: '가구', name: '미니멀 원목 라운지 체어', price: 289000, img: '/images/demo-commerce.jpg' },
-        { id: 2, cat: 'object', catLabel: '오브제', name: '핸드크래프트 세라믹 화병', price: 94000, img: '/images/demo-booking.jpg' },
-        { id: 3, cat: 'furniture', catLabel: '가구', name: '노르딕 오크 사이드 테이블', price: 168000, img: '/images/demo-brand.jpg' },
-        { id: 4, cat: 'table', catLabel: '테이블웨어', name: '매트 스톤웨어 머그 2P', price: 38000, img: '/images/demo-education.jpg' },
-        { id: 5, cat: 'object', catLabel: '오브제', name: '트래버틴 아치 캔들 홀더', price: 62000, img: '/images/demo-booking.jpg' },
-        { id: 6, cat: 'table', catLabel: '테이블웨어', name: '월넛 우드 서빙 트레이', price: 54000, img: '/images/demo-commerce.jpg' },
+        { id: 1, cat: 'furniture', catLabel: '가구', name: '미니멀 원목 라운지 체어', price: 289000, rating: 4.9, img: '/images/demo-commerce.jpg', desc: '오일 마감 내추럴 오크 프레임과 부클레 쿠션이 결합된 라운지 체어입니다.', opts: [{ name: '내추럴 오크', add: 0 }, { name: '딥 월넛', add: 25000 }] },
+        { id: 2, cat: 'object', catLabel: '오브제', name: '핸드크래프트 세라믹 화병', price: 94000, rating: 4.8, img: '/images/demo-booking.jpg', desc: '도예가가 수작업으로 빚은 매트한 질감의 오브제 화병입니다.', opts: [{ name: '샌드 베이지', add: 0 }, { name: '차콜 그레이', add: 5000 }] },
+        { id: 3, cat: 'furniture', catLabel: '가구', name: '노르딕 오크 사이드 테이블', price: 168000, rating: 4.9, img: '/images/demo-brand.jpg', desc: '소파 옆이나 침대 곁에 두기 좋은 컴팩트한 원형 테이블입니다.', opts: [{ name: '화이트 오크', add: 0 }, { name: '스모크 애쉬', add: 15000 }] },
+        { id: 4, cat: 'table', catLabel: '테이블웨어', name: '매트 스톤웨어 머그 2P', price: 38000, rating: 4.7, img: '/images/demo-education.jpg', desc: '손에 착 감기는 그립감과 보온성이 뛰어난 데일리 머그 세트입니다.', opts: [{ name: '크림 아이보리', add: 0 }, { name: '올리브 믹스', add: 4000 }] },
+        { id: 5, cat: 'light', catLabel: '조명', name: '포터블 아치 무드 램프', price: 118000, rating: 4.9, img: '/images/demo-landing.jpg', desc: '3단계 밝기 터치 조절과 무선 충전이 가능한 테이블 조명입니다.', opts: [{ name: '웜 실버', add: 0 }, { name: '매트 블랙', add: 0 }] },
+        { id: 6, cat: 'object', catLabel: '오브제', name: '트래버틴 아치 캔들 홀더', price: 62000, rating: 4.6, img: '/images/demo-booking.jpg', desc: '천연 트래버틴 석재의 자연스러운 기공이 돋보이는 인센스/캔들 홀더.', opts: [{ name: '트래버틴 기본', add: 0 }] },
+        { id: 7, cat: 'table', catLabel: '테이블웨어', name: '월넛 우드 서빙 트레이', price: 54000, rating: 4.8, img: '/images/demo-commerce.jpg', desc: '고급 호두나무 통원목으로 깎아 만든 다용도 서빙 트레이입니다.', opts: [{ name: '미디엄 (35cm)', add: 0 }, { name: '라지 (45cm)', add: 12000 }] },
+        { id: 8, cat: 'light', catLabel: '조명', name: '린넨 플로어 스탠드 조명', price: 215000, rating: 4.9, img: '/images/demo-brand.jpg', desc: '은은하게 빛을 확산시켜 거실 분위기를 바꿔주는 패브릭 갓 조명입니다.', opts: [{ name: '웜 화이트', add: 0 }] },
       ];
 
       let currentCat = 'all';
+      let currentSort = 'popular';
       let keyword = '';
-      let cart = [];
+      let cart = JSON.parse(localStorage.getItem('maison_cart_v2') || '[]');
+      let wishes = JSON.parse(localStorage.getItem('maison_wish_v2') || '[]');
+      let orders = JSON.parse(localStorage.getItem('maison_orders_v2') || '[]');
+      let reviewsMap = JSON.parse(localStorage.getItem('maison_reviews_v2') || '{}');
+      let couponApplied = false;
+      let activeDrawer = 'cart';
+      let detailItem = null;
+      let detailOpt = null;
+      let checkoutData = {};
+
+      function escapeHtml(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+      function showToast(msg) {
+        const wrap = document.getElementById('toast-wrap');
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.textContent = msg;
+        wrap.appendChild(el);
+        setTimeout(() => el.remove(), 2600);
+      }
 
       function renderProducts() {
-        const list = catalog.filter(p =>
+        let list = catalog.filter(p =>
           (currentCat === 'all' || p.cat === currentCat) &&
           p.name.toLowerCase().includes(keyword.toLowerCase())
         );
-        document.getElementById('product-grid').innerHTML = list.map(p => `
-          <article class="item">
-            <div class="thumb"><img src="${p.img}" alt="${p.name}" /></div>
-            <div class="info">
-              <small>${p.catLabel}</small>
-              <h3>${p.name}</h3>
-              <div class="price">${p.price.toLocaleString()}원</div>
-              <button class="add-btn" onclick="addToCart(${p.id})">장바구니 담기</button>
-            </div>
-          </article>
-        `).join('');
+        if (currentSort === 'low') list.sort((a, b) => a.price - b.price);
+        if (currentSort === 'high') list.sort((a, b) => b.price - a.price);
+
+        document.getElementById('product-grid').innerHTML = list.map(p => {
+          const wished = wishes.includes(p.id);
+          return `
+            <article class="item">
+              <button class="wish-btn" onclick="toggleWish(${p.id})" aria-label="찜하기">${wished ? '♥' : '♡'}</button>
+              <div class="thumb" onclick="openDetail(${p.id})"><img src="${p.img}" alt="${escapeHtml(p.name)}" /></div>
+              <div class="info">
+                <small>${p.catLabel}</small>
+                <h3 onclick="openDetail(${p.id})">${escapeHtml(p.name)}</h3>
+                <div class="rating">★ ${p.rating} (${(reviewsMap[p.id]?.length || 0) + 12})</div>
+                <div class="price">${p.price.toLocaleString()}원</div>
+                <button class="add-btn" onclick="quickAdd(${p.id})">장바구니 담기</button>
+              </div>
+            </article>
+          `;
+        }).join('');
+        updateHeaderCounts();
+      }
+
+      function updateHeaderCounts() {
+        const totalQty = cart.reduce((s, c) => s + c.qty, 0);
+        document.getElementById('cart-btn').textContent = `장바구니 (${totalQty})`;
+        document.getElementById('wish-nav-btn').textContent = `찜 (${wishes.length})`;
+        document.getElementById('order-nav-btn').textContent = `주문내역 (${orders.length})`;
       }
 
       function filterCat(cat, btn) {
@@ -196,56 +326,231 @@
         btn.classList.add('active');
         renderProducts();
       }
+      function setSort(val) { currentSort = val; renderProducts(); }
       function searchProducts(val) { keyword = val; renderProducts(); }
 
-      function addToCart(id) {
-        const existing = cart.find(c => c.id === id);
-        if (existing) existing.qty += 1;
-        else {
-          const item = catalog.find(p => p.id === id);
-          cart.push({ ...item, qty: 1 });
+      function toggleWish(id) {
+        wishes = wishes.includes(id) ? wishes.filter(w => w !== id) : [...wishes, id];
+        localStorage.setItem('maison_wish_v2', JSON.stringify(wishes));
+        renderProducts();
+        showToast(wishes.includes(id) ? '찜 목록에 담았습니다.' : '찜 목록에서 제거했습니다.');
+      }
+
+      function openDetail(id) {
+        detailItem = catalog.find(p => p.id === id);
+        detailOpt = detailItem.opts[0];
+        document.getElementById('d-img').src = detailItem.img;
+        document.getElementById('d-cat').textContent = detailItem.catLabel;
+        document.getElementById('d-name').textContent = detailItem.name;
+        document.getElementById('d-desc').textContent = detailItem.desc;
+        renderDetailOptions();
+        renderDetailReviews();
+        document.getElementById('detail-modal').classList.add('open');
+      }
+      function renderDetailOptions() {
+        document.getElementById('d-price').textContent = (detailItem.price + detailOpt.add).toLocaleString() + '원';
+        document.getElementById('d-opts').innerHTML = detailItem.opts.map((o, idx) => `
+          <button class="opt-pill ${o.name === detailOpt.name ? 'active' : ''}" onclick="pickOpt(${idx})">
+            ${escapeHtml(o.name)} ${o.add > 0 ? `(+${o.add.toLocaleString()}원)` : ''}
+          </button>
+        `).join('');
+      }
+      function pickOpt(idx) { detailOpt = detailItem.opts[idx]; renderDetailOptions(); }
+      function addDetailToCart() {
+        pushToCart(detailItem, detailOpt.name, detailItem.price + detailOpt.add);
+        document.getElementById('detail-modal').classList.remove('open');
+        openSideDrawer('cart');
+      }
+
+      function renderDetailReviews() {
+        const defaults = [{ star: 5, text: '마감이 정말 깔끔하고 공간 분위기가 확 살아났어요.' }];
+        const list = [...(reviewsMap[detailItem.id] || []), ...defaults];
+        document.getElementById('d-reviews').innerHTML = list.map(r => `
+          <div class="review-item"><span style="color:#d97706;">${'★'.repeat(r.star)}</span> ${escapeHtml(r.text)}</div>
+        `).join('');
+      }
+      function submitReview(e) {
+        e.preventDefault();
+        const star = Number(document.getElementById('r-star').value);
+        const text = document.getElementById('r-text').value.trim();
+        reviewsMap[detailItem.id] = [{ star, text }, ...(reviewsMap[detailItem.id] || [])];
+        localStorage.setItem('maison_reviews_v2', JSON.stringify(reviewsMap));
+        document.getElementById('r-text').value = '';
+        renderDetailReviews();
+        renderProducts();
+        showToast('소중한 리뷰가 등록되었습니다.');
+      }
+
+      function quickAdd(id) {
+        const p = catalog.find(x => x.id === id);
+        pushToCart(p, p.opts[0].name, p.price);
+        openSideDrawer('cart');
+      }
+      function pushToCart(p, optName, unitPrice) {
+        const key = `${p.id}-${optName}`;
+        const ex = cart.find(c => c.key === key);
+        if (ex) ex.qty += 1;
+        else cart.push({ key, id: p.id, name: p.name, optName, price: unitPrice, qty: 1 });
+        localStorage.setItem('maison_cart_v2', JSON.stringify(cart));
+        updateHeaderCounts();
+      }
+      function changeQty(key, delta) {
+        cart = cart.map(c => c.key === key ? { ...c, qty: c.qty + delta } : c).filter(c => c.qty > 0);
+        localStorage.setItem('maison_cart_v2', JSON.stringify(cart));
+        renderDrawer();
+        updateHeaderCounts();
+      }
+
+      function openSideDrawer(type) {
+        activeDrawer = type;
+        renderDrawer();
+        document.getElementById('side-drawer').classList.add('open');
+      }
+      function closeSideDrawer() { document.getElementById('side-drawer').classList.remove('open'); }
+
+      function applyCoupon() {
+        const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+        if (code === 'WELCOME10') {
+          couponApplied = true;
+          renderDrawer();
+          showToast('WELCOME10 10% 할인 쿠폰이 적용되었습니다!');
+        } else {
+          showToast('유효하지 않은 쿠폰입니다. (힌트: WELCOME10)');
         }
-        updateCartUI();
-        openCart();
       }
 
-      function changeQty(id, delta) {
-        cart = cart.map(c => c.id === id ? { ...c, qty: c.qty + delta } : c).filter(c => c.qty > 0);
-        updateCartUI();
-      }
+      function renderDrawer() {
+        const titleEl = document.getElementById('drawer-title');
+        const topEl = document.getElementById('drawer-top-extra');
+        const bodyEl = document.getElementById('drawer-body');
+        const footEl = document.getElementById('drawer-foot');
 
-      function updateCartUI() {
-        const totalQty = cart.reduce((s, c) => s + c.qty, 0);
-        const totalAmt = cart.reduce((s, c) => s + c.price * c.qty, 0);
-        document.getElementById('cart-btn').textContent = '장바구니 (' + totalQty + ')';
-        document.getElementById('cart-total').textContent = totalAmt.toLocaleString() + '원';
-        document.getElementById('cart-items').innerHTML = cart.length === 0
+        if (activeDrawer === 'wish') {
+          titleEl.textContent = `찜한 상품 (${wishes.length})`;
+          topEl.innerHTML = '';
+          footEl.innerHTML = '';
+          const items = catalog.filter(p => wishes.includes(p.id));
+          bodyEl.innerHTML = items.length === 0
+            ? '<p style="color:#78716c; text-align:center; padding:40px 0;">찜한 상품이 없습니다.</p>'
+            : items.map(p => `
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; border-bottom:1px solid #f5f5f4; padding-bottom:10px;">
+                <div><strong>${escapeHtml(p.name)}</strong><div style="font-size:0.84rem; color:#b45309;">${p.price.toLocaleString()}원</div></div>
+                <button class="nav-pill cart-btn" onclick="quickAdd(${p.id})">담기</button>
+              </div>
+            `).join('');
+          return;
+        }
+
+        if (activeDrawer === 'orders') {
+          titleEl.textContent = `주문 내역 (${orders.length})`;
+          topEl.innerHTML = '';
+          footEl.innerHTML = '';
+          bodyEl.innerHTML = orders.length === 0
+            ? '<p style="color:#78716c; text-align:center; padding:40px 0;">주문 완료 내역이 없습니다.</p>'
+            : orders.map(o => `
+              <div style="background:#f5f5f4; padding:12px; border-radius:10px; font-size:0.85rem;">
+                <strong>주문번호 ${o.orderNo}</strong> (${o.date})<br />
+                <span>${escapeHtml(o.summary)} · <strong>${o.total.toLocaleString()}원</strong></span>
+              </div>
+            `).join('');
+          return;
+        }
+
+        // 장바구니
+        titleEl.textContent = '장바구니';
+        const subtotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+        const freeShipGoal = 150000;
+        const pct = Math.min(100, Math.round((subtotal / freeShipGoal) * 100));
+        const remain = Math.max(0, freeShipGoal - subtotal);
+        topEl.innerHTML = `
+          <div class="ship-box">
+            <span>${remain === 0 ? '✓ 무료배송 조건 달성!' : `${remain.toLocaleString()}원 더 담으면 무료배송`}</span>
+            <div class="ship-bar"><div class="ship-fill" style="width:${pct}%"></div></div>
+          </div>
+        `;
+
+        bodyEl.innerHTML = cart.length === 0
           ? '<p style="color:#78716c; text-align:center; padding:40px 0;">장바구니가 비어 있습니다.</p>'
           : cart.map(c => `
-            <div class="cart-row">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; border-bottom:1px solid #f5f5f4; padding-bottom:10px;">
               <div>
-                <strong style="font-size:0.9rem;">${c.name}</strong>
-                <div style="font-size:0.82rem; color:#b45309;">${(c.price * c.qty).toLocaleString()}원</div>
+                <strong style="font-size:0.9rem;">${escapeHtml(c.name)}</strong>
+                <div style="font-size:0.78rem; color:#78716c;">옵션: ${escapeHtml(c.optName)}</div>
+                <div style="font-size:0.84rem; color:#b45309;">${(c.price * c.qty).toLocaleString()}원</div>
               </div>
               <div class="qty-ctrl">
-                <button onclick="changeQty(${c.id}, -1)">-</button>
+                <button onclick="changeQty('${c.key}', -1)">-</button>
                 <span>${c.qty}</span>
-                <button onclick="changeQty(${c.id}, 1)">+</button>
+                <button onclick="changeQty('${c.key}', 1)">+</button>
               </div>
             </div>
           `).join('');
+
+        const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
+        const shipping = subtotal > 0 && subtotal < freeShipGoal ? 3000 : 0;
+        const finalAmt = subtotal - discount + shipping;
+
+        footEl.innerHTML = `
+          <div style="border-top:1px solid #e7e5e4; padding-top:12px;">
+            <div class="coupon-row">
+              <input type="text" id="coupon-input" placeholder="쿠폰코드 입력 (WELCOME10)" value="${couponApplied ? 'WELCOME10' : ''}" />
+              <button class="nav-pill" onclick="applyCoupon()">적용</button>
+            </div>
+            <div style="font-size:0.84rem; color:#57534e; display:flex; justify-content:space-between;"><span>상품 합계</span><span>${subtotal.toLocaleString()}원</span></div>
+            ${couponApplied ? `<div style="font-size:0.84rem; color:#16a34a; display:flex; justify-content:space-between;"><span>쿠폰 할인 (10%)</span><span>-${discount.toLocaleString()}원</span></div>` : ''}
+            <div style="font-size:0.84rem; color:#57534e; display:flex; justify-content:space-between;"><span>배송비</span><span>${shipping === 0 ? '무료' : shipping.toLocaleString() + '원'}</span></div>
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.08rem; margin-top:8px;">
+              <span>총 결제 금액</span><span id="final-pay-amt">${finalAmt.toLocaleString()}원</span>
+            </div>
+            <button class="checkout-btn" onclick="startCheckout(${finalAmt})">주문·결제 진행하기</button>
+          </div>
+        `;
       }
 
-      function openCart() { document.getElementById('cart-drawer').classList.add('open'); }
-      function closeCart() { document.getElementById('cart-drawer').classList.remove('open'); }
-      function checkout() {
-        if (cart.length === 0) return alert('장바구니에 상품을 담아주세요.');
-        alert('총 ' + document.getElementById('cart-total').textContent + ' 주문이 완료되었습니다!');
-        cart = []; updateCartUI(); closeCart();
+      function startCheckout(finalAmt) {
+        if (cart.length === 0) return showToast('장바구니에 상품을 먼저 담아주세요.');
+        checkoutData = { finalAmt };
+        closeSideDrawer();
+        setCheckoutStep(1);
+        document.getElementById('checkout-modal').classList.add('open');
       }
+
+      function setCheckoutStep(step) {
+        [1, 2, 3].forEach(n => document.getElementById('cs-' + n).classList.toggle('active', n === step));
+        const body = document.getElementById('checkout-body');
+        if (step === 1) {
+          body.innerHTML = `
+            <input class="form-input" id="co-name" placeholder="수령인 성함" value="김메종" required />
+            <input class="form-input" id="co-addr" placeholder="배송지 주소" value="서울시 성동구 연무장길 42" required />
+            <button class="checkout-btn" onclick="checkoutData.name=document.getElementById('co-name').value; setCheckoutStep(2)">다음: 결제수단 선택</button>
+          `;
+        } else if (step === 2) {
+          body.innerHTML = `
+            <select class="form-input" id="co-pay"><option>신용/체크카드 간편결제</option><option>네이버페이</option><option>카카오페이</option></select>
+            <p style="font-size:0.88rem; color:#57534e; margin-bottom:12px;">최종 결제 금액: <strong>${checkoutData.finalAmt.toLocaleString()}원</strong></p>
+            <button class="checkout-btn" onclick="completeOrder()">${checkoutData.finalAmt.toLocaleString()}원 결제 완료하기</button>
+          `;
+        } else {
+          const orderNo = 'MS-' + Date.now().toString().slice(-6);
+          const summary = cart.map(c => `${c.name}(${c.qty})`).join(', ');
+          orders.unshift({ orderNo, date: new Date().toLocaleDateString('ko-KR'), summary, total: checkoutData.finalAmt });
+          localStorage.setItem('maison_orders_v2', JSON.stringify(orders));
+          cart = []; couponApplied = false;
+          localStorage.setItem('maison_cart_v2', JSON.stringify(cart));
+          updateHeaderCounts();
+          body.innerHTML = `
+            <div style="text-align:center; padding:16px 0;">
+              <strong style="font-size:1.15rem; color:#16a34a;">주문이 정상 완료되었습니다!</strong>
+              <p style="font-size:0.88rem; color:#57534e; margin-top:8px;">주문번호: ${orderNo} · 상단 [주문내역]에서 언제든 확인하실 수 있습니다.</p>
+              <button class="checkout-btn" onclick="document.getElementById('checkout-modal').classList.remove('open')">쇼핑 계속하기</button>
+            </div>
+          `;
+          showToast(`주문번호 ${orderNo} 결제가 완료되었습니다.`);
+        }
+      }
+      function completeOrder() { setCheckoutStep(3); }
 
       renderProducts();
-      updateCartUI();
     </script>
   </body>
 </html>

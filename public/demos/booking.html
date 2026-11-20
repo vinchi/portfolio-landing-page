@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SERENE.CLINIC — 프라이빗 웰니스 & 실시간 예약</title>
+    <title>SERENE.CLINIC — 실시간 캘린더 예약 & 예약 관리 앱</title>
     <link
       rel="stylesheet"
       as="style"
@@ -16,150 +16,384 @@
         font-family: 'Pretendard', -apple-system, sans-serif;
         background: #fdf8f6; color: #292524; line-height: 1.6;
       }
-      button { font-family: inherit; cursor: pointer; }
-      .container { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+      button, input, select { font-family: inherit; }
+      button { cursor: pointer; }
+      .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
 
       header {
         position: sticky; top: 0; z-index: 30;
         background: rgba(255,255,255,0.92); backdrop-filter: blur(10px);
         border-bottom: 1px solid #f1e8e4;
       }
-      .nav-inner { height: 68px; display: flex; justify-content: space-between; align-items: center; }
+      .nav-inner { height: 70px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
       .logo { font-weight: 800; color: #9f1239; font-size: 1.18rem; }
-
-      .wrap {
-        padding: 52px 0; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 36px; align-items: start;
+      .tab-switch { display: flex; gap: 8px; }
+      .tab-btn {
+        padding: 8px 16px; border-radius: 999px; border: 1px solid #e7e5e4;
+        background: #fff; color: #57534e; font-weight: 600; font-size: 0.85rem;
       }
+      .tab-btn.active { background: #9f1239; color: #fff; border-color: #9f1239; }
+
+      .wrap { padding: 42px 0 64px; display: grid; grid-template-columns: 0.95fr 1.15fr; gap: 32px; align-items: start; }
       .tag {
         display: inline-block; background: #ffe4e6; color: #be123c;
-        font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; margin-bottom: 14px;
+        font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; margin-bottom: 12px;
       }
-      h1 { font-size: clamp(1.75rem, 3.5vw, 2.35rem); line-height: 1.28; margin-bottom: 14px; }
-      .lead { color: #57534e; font-size: 0.98rem; margin-bottom: 22px; }
+      h1 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); line-height: 1.28; margin-bottom: 12px; }
+      .lead { color: #57534e; font-size: 0.96rem; margin-bottom: 18px; }
       .clinic-photo {
         width: 100%; border-radius: 18px; object-fit: cover; aspect-ratio: 16 / 10;
-        box-shadow: 0 16px 36px rgba(159, 18, 57, 0.08);
+        box-shadow: 0 16px 36px rgba(159, 18, 57, 0.08); margin-bottom: 18px;
       }
 
-      .booking-box {
-        background: #fff; border: 1px solid #f1e8e4; border-radius: 20px; padding: 28px;
+      /* 위자드 박스 */
+      .wizard-box {
+        background: #fff; border: 1px solid #f1e8e4; border-radius: 22px; padding: 28px;
         box-shadow: 0 14px 36px rgba(159, 18, 57, 0.07);
       }
-      .booking-box h3 { font-size: 1.15rem; margin-bottom: 14px; }
-      .field-label { display: block; font-size: 0.83rem; font-weight: 700; color: #57534e; margin: 12px 0 6px; }
-      .booking-box select, .booking-box input {
-        width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #e7e5e4;
-        font-family: inherit; font-size: 0.9rem;
+      .steps-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 22px; }
+      .step-pill {
+        text-align: center; padding: 8px 4px; border-radius: 10px; background: #fdf8f6;
+        border: 1px solid #f1e8e4; font-size: 0.78rem; font-weight: 700; color: #78716c;
       }
-      .times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
-      .time-btn {
-        padding: 9px; border-radius: 8px; border: 1px solid #e7e5e4; background: #fff; font-size: 0.86rem;
+      .step-pill.active { background: #9f1239; color: #fff; border-color: #9f1239; }
+
+      .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0 18px; }
+      .pick-card {
+        padding: 13px; border-radius: 12px; border: 1px solid #e7e5e4; background: #fff; text-align: left;
       }
-      .time-btn.active { background: #9f1239; color: #fff; border-color: #9f1239; font-weight: 600; }
-      .submit-btn {
-        width: 100%; padding: 13px; border-radius: 10px; border: none;
-        background: #9f1239; color: #fff; font-weight: 700; font-size: 0.95rem; margin-top: 18px;
+      .pick-card.active { border-color: #9f1239; background: #fff1f2; }
+      .pick-card strong { display: block; font-size: 0.9rem; margin-bottom: 3px; }
+      .pick-card span { font-size: 0.78rem; color: #78716c; }
+
+      /* 커스텀 월간 캘린더 */
+      .cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+      .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; margin-bottom: 16px; }
+      .cal-dow { font-size: 0.74rem; color: #78716c; font-weight: 700; padding-bottom: 4px; }
+      .cal-day {
+        padding: 8px 0; border-radius: 8px; border: 1px solid transparent; background: #fafaf9; font-size: 0.84rem;
+      }
+      .cal-day.selected { background: #9f1239; color: #fff; font-weight: 700; }
+      .cal-day.empty { background: none; cursor: default; }
+
+      .times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0 18px; }
+      .time-btn { padding: 9px; border-radius: 8px; border: 1px solid #e7e5e4; background: #fff; font-size: 0.85rem; }
+      .time-btn.active { background: #9f1239; color: #fff; border-color: #9f1239; font-weight: 700; }
+      .time-btn:disabled { background: #f5f5f4; color: #a8a29e; text-decoration: line-through; cursor: not-allowed; }
+
+      .form-input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #e7e5e4; margin-bottom: 10px; font-size: 0.9rem; }
+      .btn-rose {
+        padding: 12px 18px; border-radius: 10px; border: none; background: #9f1239;
+        color: #fff; font-weight: 700; font-size: 0.92rem;
+      }
+      .btn-soft {
+        padding: 12px 18px; border-radius: 10px; border: 1px solid #e7e5e4; background: #fff;
+        color: #57534e; font-weight: 600; font-size: 0.92rem;
       }
 
-      .reservation-list {
-        margin-top: 28px; background: #fff; border: 1px solid #f1e8e4; border-radius: 16px; padding: 22px;
+      /* 모바일 QR 예약권 */
+      .ticket-box {
+        border: 1.5px dashed #9f1239; border-radius: 16px; padding: 22px; background: #fff1f2; text-align: center;
       }
-      .res-row {
-        display: flex; justify-content: space-between; align-items: center; padding: 10px 0;
-        border-bottom: 1px solid #f5f5f4; font-size: 0.88rem;
+      .res-card {
+        background: #fff; border: 1px solid #f1e8e4; border-radius: 16px; padding: 20px; margin-bottom: 12px;
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
       }
-      .res-row:last-child { border-bottom: none; }
-      .res-badge { background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 999px; font-size: 0.76rem; font-weight: 700; }
+      .badge-ok { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 999px; font-size: 0.76rem; font-weight: 700; }
+      .badge-cancel { background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 999px; font-size: 0.76rem; font-weight: 700; }
 
-      footer { border-top: 1px solid #f1e8e4; padding: 34px 0; text-align: center; color: #78716c; font-size: 0.88rem; margin-top: 40px; }
-      @media (max-width: 820px) { .wrap { grid-template-columns: 1fr; } }
+      .modal-bg {
+        position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.6);
+        display: none; place-items: center; padding: 20px;
+      }
+      .modal-bg.open { display: grid; }
+      .modal { width: 100%; max-width: 420px; background: #fff; border-radius: 18px; padding: 24px; }
+
+      .toast-wrap { position: fixed; right: 20px; bottom: 20px; z-index: 120; display: flex; flex-direction: column; gap: 8px; }
+      .toast { background: #292524; color: #fff; padding: 11px 16px; border-radius: 10px; font-size: 0.86rem; }
+
+      footer { border-top: 1px solid #f1e8e4; padding: 34px 0; text-align: center; color: #78716c; font-size: 0.88rem; }
+      @media (max-width: 840px) { .wrap, .card-grid, .steps-row { grid-template-columns: 1fr; } }
     </style>
   </head>
   <body>
     <header>
       <div class="container nav-inner">
         <div class="logo">SERENE.CLINIC</div>
-        <div style="font-size:0.88rem; color:#78716c;">100% 사전 예약제 · 청담 본점</div>
+        <div class="tab-switch">
+          <button class="tab-btn active" id="nav-book" onclick="switchTab('book')">온라인 예약하기</button>
+          <button class="tab-btn" id="nav-manage" onclick="switchTab('manage')">내 예약 조회·관리 (1)</button>
+        </div>
       </div>
     </header>
 
     <div class="container">
-      <section class="wrap">
+      <!-- 1. 온라인 예약 위자드 -->
+      <section id="book-view" class="wrap">
         <div>
           <span class="tag">프라이빗 웰니스 & 에스테틱</span>
-          <h1>오직 당신만을 위한<br />맞춤형 회복 프로그램</h1>
+          <h1>캘린더에서 가능 시간을 확인하고<br />10초 만에 예약을 확정하세요</h1>
           <p class="lead">
-            복잡한 전화 대기 없이 원하는 프로그램, 날짜, 시간을 선택해
-            10초 만에 방문 예약을 완료하실 수 있습니다.
+            4단계 예약 위자드를 완료하면 QR 모바일 예약권이 즉시 발급되며,
+            [내 예약 조회·관리] 탭에서 언제든 시간을 변경하거나 취소할 수 있습니다.
           </p>
           <img src="/images/demo-booking.jpg" alt="세린 클리닉 라운지" class="clinic-photo" />
+        </div>
 
-          <div class="reservation-list">
-            <h4 style="margin-bottom:10px; font-size:0.98rem;">실시간 접수 현황</h4>
-            <div id="res-items">
-              <div class="res-row">
-                <span>김서현님 · 1:1 스킨 리밸런싱 (2026-11-15 11:30)</span>
-                <span class="res-badge">예약확정</span>
-              </div>
+        <div class="wizard-box">
+          <div class="steps-row">
+            <div class="step-pill active" id="st-1">1. 프로그램</div>
+            <div class="step-pill" id="st-2">2. 날짜·시간</div>
+            <div class="step-pill" id="st-3">3. 문진·정보</div>
+            <div class="step-pill" id="st-4">4. 예약권</div>
+          </div>
+
+          <!-- Step 1 -->
+          <div id="step-1">
+            <strong>희망 프로그램 선택</strong>
+            <div class="card-grid" id="prog-grid"></div>
+            <strong>담당 스페셜리스트</strong>
+            <div class="card-grid" id="doc-grid"></div>
+            <button class="btn-rose" style="width:100%;" onclick="goStep(2)">다음: 날짜 및 시간 선택 →</button>
+          </div>
+
+          <!-- Step 2 -->
+          <div id="step-2" style="display:none;">
+            <div class="cal-head">
+              <button class="tab-btn" onclick="shiftMonth(-1)">◀</button>
+              <strong id="cal-title">2026년 11월</strong>
+              <button class="tab-btn" onclick="shiftMonth(1)">▶</button>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+            <strong>예약 가능 시간 (<span id="picked-date-lbl"></span>)</strong>
+            <div class="times" id="time-grid"></div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn-soft" style="flex:1;" onclick="goStep(1)">이전</button>
+              <button class="btn-rose" style="flex:2;" onclick="goStep(3)">다음: 정보 및 문진 입력 →</button>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <form id="step-3" style="display:none;" onsubmit="confirmBooking(event)">
+            <input class="form-input" id="bk-name" placeholder="예약자 성함 *" required />
+            <input class="form-input" id="bk-phone" placeholder="연락처 (010-1234-5678) *" required />
+            <div style="background:#fdf8f6; padding:12px; border-radius:10px; margin-bottom:14px; font-size:0.85rem;">
+              <strong style="display:block; margin-bottom:6px;">사전 문진 체크리스트</strong>
+              <label style="display:block;"><input type="checkbox" id="chk-1" /> 최근 2주 내 피부과 시술 이력이 있습니다.</label>
+              <label style="display:block;"><input type="checkbox" id="chk-2" /> 민감성 피부/알레르기 주의가 필요합니다.</label>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="btn-soft" style="flex:1;" onclick="goStep(2)">이전</button>
+              <button type="submit" class="btn-rose" style="flex:2;">예약 확정 & 예약권 발급</button>
+            </div>
+          </form>
+
+          <!-- Step 4 -->
+          <div id="step-4" style="display:none;">
+            <div class="ticket-box" id="ticket-card"></div>
+            <div style="display:flex; gap:10px; margin-top:16px;">
+              <button class="btn-soft" style="flex:1;" onclick="goStep(1)">새 예약하기</button>
+              <button class="btn-rose" style="flex:1;" onclick="switchTab('manage')">예약 관리에서 확인</button>
             </div>
           </div>
         </div>
+      </section>
 
-        <form class="booking-box" onsubmit="submitBooking(event)">
-          <h3>온라인 빠른 예약</h3>
-          <label class="field-label">희망 프로그램</label>
-          <select id="b-prog">
-            <option value="1:1 스킨 리밸런싱 (60분)">1:1 스킨 리밸런싱 (60분)</option>
-            <option value="시그니처 아로마 테라피 (90분)">시그니처 아로마 테라피 (90분)</option>
-            <option value="프리미엄 웰니스 컨설팅 (40분)">프리미엄 웰니스 컨설팅 (40분)</option>
-          </select>
-
-          <label class="field-label">방문 날짜</label>
-          <input type="date" id="b-date" value="2026-11-16" required />
-
-          <label class="field-label">희망 시간</label>
-          <div class="times">
-            <button type="button" class="time-btn active" onclick="pickTime(this)">10:00</button>
-            <button type="button" class="time-btn" onclick="pickTime(this)">11:30</button>
-            <button type="button" class="time-btn" onclick="pickTime(this)">14:00</button>
-            <button type="button" class="time-btn" onclick="pickTime(this)">15:30</button>
-            <button type="button" class="time-btn" onclick="pickTime(this)">17:00</button>
-            <button type="button" class="time-btn" onclick="pickTime(this)">18:30</button>
-          </div>
-
-          <label class="field-label">예약자 성함 *</label>
-          <input type="text" id="b-name" placeholder="홍길동" required />
-
-          <label class="field-label">연락처 *</label>
-          <input type="text" id="b-phone" placeholder="010-1234-5678" required />
-
-          <button type="submit" class="submit-btn">예약 확정하기</button>
-        </form>
+      <!-- 2. 내 예약 조회·관리 -->
+      <section id="manage-view" style="display:none; padding:44px 0 80px;">
+        <h2 style="margin-bottom:8px;">내 예약 조회 및 변경·취소</h2>
+        <p style="color:#57534e; margin-bottom:22px; font-size:0.94rem;">접수된 예약 시간을 변경하거나 예약을 취소하실 수 있습니다.</p>
+        <div id="res-list"></div>
       </section>
     </div>
 
     <footer>
-      <div class="container">© 2026 SERENE.CLINIC — 포트폴리오 #6 병원·뷰티 예약 플랫폼 데모 사이트</div>
+      <div class="container">© 2026 SERENE.CLINIC — 포트폴리오 #6 실시간 캘린더 예약 플랫폼 데모</div>
     </footer>
 
+    <!-- 시간 변경 모달 -->
+    <div class="modal-bg" id="resched-modal" onclick="this.classList.remove('open')">
+      <div class="modal" onclick="event.stopPropagation()">
+        <h3 style="margin-bottom:12px;">예약 시간 변경</h3>
+        <div class="times" id="resched-times"></div>
+        <button class="btn-soft" style="width:100%;" onclick="document.getElementById('resched-modal').classList.remove('open')">닫기</button>
+      </div>
+    </div>
+
+    <div class="toast-wrap" id="toast-wrap"></div>
+
     <script>
-      let chosenTime = '10:00';
-      function pickTime(el) {
-        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        chosenTime = el.textContent;
+      const programs = [
+        { name: '1:1 스킨 리밸런싱 (60분)', price: '150,000원' },
+        { name: '시그니처 아로마 테라피 (90분)', price: '210,000원' },
+        { name: '프리미엄 웰니스 컨설팅 (40분)', price: '90,000원' },
+        { name: '딥 릴랙싱 림프 케어 (70분)', price: '180,000원' },
+      ];
+      const doctors = [
+        { name: '이서윤 대표원장', role: '피부 리밸런싱 전담' },
+        { name: '박도현 테라피스트', role: '아로마·체형 케어' },
+      ];
+      const timeSlots = ['10:00', '11:30', '14:00', '15:30', '17:00', '18:30'];
+
+      let reservations = JSON.parse(localStorage.getItem('serene_res_v2') || 'null') || [
+        { code: 'SR-261115', name: '김서현', phone: '010-2222-3333', prog: '1:1 스킨 리밸런싱 (60분)', doc: '이서윤 대표원장', date: '2026-11-21', time: '11:30', status: '예약확정' },
+      ];
+
+      let selProg = programs[0].name;
+      let selDoc = doctors[0].name;
+      let calYear = 2026, calMonth = 10; // 0-indexed (10 = 11월)
+      let selDate = '2026-11-21';
+      let selTime = '14:00';
+      let reschedCode = null;
+
+      function escapeHtml(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       }
-      function submitBooking(e) {
+      function showToast(msg) {
+        const wrap = document.getElementById('toast-wrap');
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.textContent = msg;
+        wrap.appendChild(el);
+        setTimeout(() => el.remove(), 2600);
+      }
+
+      function switchTab(tab) {
+        document.getElementById('book-view').style.display = tab === 'book' ? 'grid' : 'none';
+        document.getElementById('manage-view').style.display = tab === 'manage' ? 'block' : 'none';
+        document.getElementById('nav-book').classList.toggle('active', tab === 'book');
+        document.getElementById('nav-manage').classList.toggle('active', tab === 'manage');
+        if (tab === 'manage') renderManage();
+      }
+
+      function renderStep1() {
+        document.getElementById('prog-grid').innerHTML = programs.map(p => `
+          <button type="button" class="pick-card ${p.name === selProg ? 'active' : ''}" onclick="selProg='${p.name}'; renderStep1()">
+            <strong>${p.name}</strong><span>${p.price}</span>
+          </button>
+        `).join('');
+        document.getElementById('doc-grid').innerHTML = doctors.map(d => `
+          <button type="button" class="pick-card ${d.name === selDoc ? 'active' : ''}" onclick="selDoc='${d.name}'; renderStep1()">
+            <strong>${d.name}</strong><span>${d.role}</span>
+          </button>
+        `).join('');
+      }
+
+      function shiftMonth(delta) {
+        calMonth += delta;
+        if (calMonth < 0) { calMonth = 11; calYear -= 1; }
+        if (calMonth > 11) { calMonth = 0; calYear += 1; }
+        renderCalendar();
+      }
+
+      function renderCalendar() {
+        document.getElementById('cal-title').textContent = `${calYear}년 ${calMonth + 1}월`;
+        const firstDay = new Date(calYear, calMonth, 1).getDay();
+        const lastDate = new Date(calYear, calMonth + 1, 0).getDate();
+        const dows = ['일', '월', '화', '수', '목', '금', '토'].map(d => `<div class="cal-dow">${d}</div>`).join('');
+        let cells = '';
+        for (let i = 0; i < firstDay; i++) cells += `<div class="cal-day empty"></div>`;
+        for (let d = 1; d <= lastDate; d++) {
+          const mm = String(calMonth + 1).padStart(2, '0');
+          const dd = String(d).padStart(2, '0');
+          const full = `${calYear}-${mm}-${dd}`;
+          cells += `<button type="button" class="cal-day ${full === selDate ? 'selected' : ''}" onclick="pickDate('${full}')">${d}</button>`;
+        }
+        document.getElementById('cal-grid').innerHTML = dows + cells;
+        document.getElementById('picked-date-lbl').textContent = selDate;
+        renderTimeSlots();
+      }
+
+      function pickDate(full) { selDate = full; renderCalendar(); }
+
+      function renderTimeSlots() {
+        const booked = reservations.filter(r => r.date === selDate && r.status === '예약확정').map(r => r.time);
+        if (booked.includes(selTime)) {
+          selTime = timeSlots.find(t => !booked.includes(t)) || '';
+        }
+        document.getElementById('time-grid').innerHTML = timeSlots.map(t => {
+          const isBusy = booked.includes(t);
+          return `<button type="button" class="time-btn ${t === selTime ? 'active' : ''}" ${isBusy ? 'disabled' : ''} onclick="selTime='${t}'; renderTimeSlots()">${t}${isBusy ? ' (마감)' : ''}</button>`;
+        }).join('');
+      }
+
+      function goStep(n) {
+        [1, 2, 3, 4].forEach(i => {
+          document.getElementById('step-' + i).style.display = i === n ? 'block' : 'none';
+          document.getElementById('st-' + i).classList.toggle('active', i === n);
+        });
+        if (n === 2) renderCalendar();
+      }
+
+      function confirmBooking(e) {
         e.preventDefault();
-        const name = document.getElementById('b-name').value;
-        const prog = document.getElementById('b-prog').value;
-        const date = document.getElementById('b-date').value;
-        const row = document.createElement('div');
-        row.className = 'res-row';
-        row.innerHTML = '<span>' + name + '님 · ' + prog + ' (' + date + ' ' + chosenTime + ')</span><span class="res-badge">예약확정</span>';
-        document.getElementById('res-items').prepend(row);
-        alert(name + '님, ' + date + ' ' + chosenTime + ' 예약이 확정되었습니다!');
+        if (!selTime) return showToast('예약 가능한 시간을 선택해 주세요.');
+        const name = document.getElementById('bk-name').value.trim();
+        const phone = document.getElementById('bk-phone').value.trim();
+        const code = 'SR-' + Date.now().toString().slice(-6);
+        const item = { code, name, phone, prog: selProg, doc: selDoc, date: selDate, time: selTime, status: '예약확정' };
+        reservations.unshift(item);
+        localStorage.setItem('serene_res_v2', JSON.stringify(reservations));
+        updateManageCount();
+
+        document.getElementById('ticket-card').innerHTML = `
+          <span class="tag">모바일 예약권 발급 완료</span>
+          <h3 style="margin-bottom:8px;">예약번호: ${code}</h3>
+          <p style="font-size:0.9rem; color:#57534e;">${escapeHtml(name)}님 · ${selProg}<br />${selDate} ${selTime} (${selDoc})</p>
+          <svg width="72" height="72" viewBox="0 0 36 36" style="margin:12px auto 0; display:block;" aria-label="QR코드">
+            <rect width="36" height="36" fill="#fff" rx="4"/>
+            <path fill="#9f1239" d="M4 4h10v10H4zm2 2v6h6V6zm16-2h10v10H22zm2 2v6h6V6zM4 22h10v10H4zm2 2v6h6v-6zm12-12h4v4h-4zm4 4h4v4h-4zm4 4h6v6h-6zm-8 4h4v6h-4z"/>
+          </svg>
+        `;
+        goStep(4);
+        showToast(`${name}님, ${selDate} ${selTime} 예약이 확정되었습니다.`);
       }
+
+      function updateManageCount() {
+        document.getElementById('nav-manage').textContent = `내 예약 조회·관리 (${reservations.length})`;
+      }
+
+      function renderManage() {
+        document.getElementById('res-list').innerHTML = reservations.map(r => `
+          <div class="res-card">
+            <div>
+              <span class="${r.status === '예약확정' ? 'badge-ok' : 'badge-cancel'}">${r.status}</span>
+              <strong style="margin-left:8px;">${r.code} · ${escapeHtml(r.name)}님</strong>
+              <div style="font-size:0.88rem; color:#57534e; margin-top:4px;">${escapeHtml(r.prog)} · ${r.date} <strong>${r.time}</strong> (${r.doc})</div>
+            </div>
+            ${r.status === '예약확정' ? `
+              <div style="display:flex; gap:8px;">
+                <button class="tab-btn" onclick="openResched('${r.code}')">시간 변경</button>
+                <button class="tab-btn" onclick="cancelRes('${r.code}')">예약 취소</button>
+              </div>
+            ` : ''}
+          </div>
+        `).join('');
+      }
+
+      function openResched(code) {
+        reschedCode = code;
+        document.getElementById('resched-times').innerHTML = timeSlots.map(t => `
+          <button type="button" class="time-btn" onclick="applyResched('${t}')">${t}</button>
+        `).join('');
+        document.getElementById('resched-modal').classList.add('open');
+      }
+      function applyResched(newTime) {
+        reservations = reservations.map(r => r.code === reschedCode ? { ...r, time: newTime } : r);
+        localStorage.setItem('serene_res_v2', JSON.stringify(reservations));
+        document.getElementById('resched-modal').classList.remove('open');
+        renderManage();
+        showToast(`예약 시간이 ${newTime}으로 변경되었습니다.`);
+      }
+      function cancelRes(code) {
+        reservations = reservations.map(r => r.code === code ? { ...r, status: '예약취소' } : r);
+        localStorage.setItem('serene_res_v2', JSON.stringify(reservations));
+        renderManage();
+        showToast(`예약(${code})이 취소 처리되었습니다.`);
+      }
+
+      renderStep1();
+      updateManageCount();
     </script>
   </body>
 </html>

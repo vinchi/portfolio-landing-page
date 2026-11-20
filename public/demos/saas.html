@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PULSE.CLOUD — 기능형 SaaS 웹 플랫폼</title>
+    <title>PULSE.CLOUD — 엔터프라이즈 클라우드 관제 & BI 대시보드</title>
     <link
       rel="stylesheet"
       as="style"
@@ -14,182 +14,538 @@
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body {
         font-family: 'Pretendard', -apple-system, sans-serif;
-        background: #090d16;
-        color: #f1f5f9;
-        display: flex;
-        min-height: 100vh;
+        background: #070b14; color: #f1f5f9; display: flex; min-height: 100vh;
       }
-      button { font-family: inherit; cursor: pointer; }
+      button, input, select { font-family: inherit; }
+      button { cursor: pointer; }
+
+      /* 사이드바 */
       aside {
-        width: 220px; background: #0f1624; border-right: 1px solid rgba(255,255,255,0.08);
+        width: 235px; background: #0d1322; border-right: 1px solid rgba(255,255,255,0.08);
         padding: 24px 16px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;
       }
-      @media (max-width: 680px) { aside { width: 150px; padding: 16px 10px; } }
-      .app-name { font-weight: 800; color: #22d3ee; margin-bottom: 22px; font-size: 1.1rem; padding-left: 10px; }
+      .app-brand {
+        font-weight: 800; color: #22d3ee; font-size: 1.15rem; padding: 0 10px 20px;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; }
       .nav-item {
         padding: 11px 14px; border-radius: 10px; font-size: 0.9rem; color: #94a3b8;
-        border: none; background: none; text-align: left; font-weight: 500;
+        border: none; background: none; text-align: left; font-weight: 500; transition: all 0.15s;
       }
-      .nav-item:hover { background: rgba(255,255,255,0.04); color: #fff; }
+      .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
       .nav-item.active { background: rgba(34, 211, 238, 0.14); color: #22d3ee; font-weight: 700; }
 
-      main { flex: 1; padding: 28px 32px; overflow-y: auto; }
-      .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px; }
+      main { flex: 1; padding: 26px 32px; overflow-y: auto; min-width: 0; }
+      .topbar {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 22px; flex-wrap: wrap; gap: 12px;
+      }
       .topbar h1 { font-size: 1.45rem; }
-      .badge {
-        background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 6px 12px;
-        border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+      .filter-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      .pill-btn {
+        padding: 7px 13px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);
+        background: #11192b; color: #94a3b8; font-size: 0.82rem; font-weight: 600;
       }
-      .range-btns { display: flex; gap: 6px; }
-      .range-btn {
-        padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);
-        background: #131c2e; color: #94a3b8; font-size: 0.82rem;
+      .pill-btn.active { background: #22d3ee; color: #070b14; border-color: #22d3ee; }
+      .select-dark {
+        padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.14);
+        background: #11192b; color: #f1f5f9; font-size: 0.82rem;
       }
-      .range-btn.active { background: #22d3ee; color: #090d16; font-weight: 700; border-color: #22d3ee; }
 
+      /* 배너 */
       .banner-card {
         position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 22px;
-        border: 1px solid rgba(255,255,255,0.09); height: 155px;
+        border: 1px solid rgba(255,255,255,0.09); height: 140px;
       }
-      .banner-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+      .banner-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
       .banner-text {
-        position: absolute; inset: 0; padding: 22px; display: flex; flex-direction: column;
-        justify-content: flex-end; background: linear-gradient(to top, rgba(9, 13, 22, 0.92), transparent);
+        position: absolute; inset: 0; padding: 20px 24px; display: flex; flex-direction: column;
+        justify-content: flex-end; background: linear-gradient(to top, rgba(7, 11, 20, 0.94), transparent);
       }
 
-      .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 22px; }
-      .metric-card { background: #131c2e; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 18px; }
-      .metric-card span { font-size: 0.82rem; color: #94a3b8; }
-      .metric-card strong { display: block; font-size: 1.5rem; margin-top: 6px; color: #fff; }
+      /* 메트릭 & 차트 그리드 */
+      .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+      .metric-card { background: #11192b; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 18px; }
+      .metric-card span { font-size: 0.78rem; color: #94a3b8; }
+      .metric-card strong { display: block; font-size: 1.4rem; margin: 4px 0; color: #fff; }
+      .metric-card small { font-size: 0.76rem; color: #34d399; }
 
-      .panel { background: #131c2e; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 22px; }
-      .panel h2 { font-size: 1.05rem; margin-bottom: 14px; }
-      .row {
-        display: flex; justify-content: space-between; align-items: center; padding: 12px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem; color: #cbd5e1;
+      .chart-grid { display: grid; grid-template-columns: 1.45fr 0.85fr; gap: 18px; margin-bottom: 22px; }
+      .panel { background: #11192b; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px 22px; }
+      .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 10px; flex-wrap: wrap; }
+      .panel-head h2 { font-size: 1rem; }
+
+      .svg-wrap { position: relative; width: 100%; }
+      .chart-tooltip {
+        position: absolute; pointer-events: none; background: #070b14; border: 1px solid #22d3ee;
+        color: #fff; font-size: 0.76rem; padding: 5px 9px; border-radius: 7px; display: none; white-space: nowrap;
       }
-      .row:last-child { border-bottom: none; }
+
+      /* 도넛 차트 */
+      .donut-wrap { display: flex; align-items: center; gap: 20px; justify-content: center; padding: 10px 0; }
+      .donut-legend { display: flex; flex-direction: column; gap: 8px; font-size: 0.84rem; color: #cbd5e1; }
+      .legend-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+
+      /* 라이브 로그 & 테이블 */
+      .log-list { display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto; }
+      .log-row {
+        display: flex; justify-content: space-between; align-items: center; gap: 10px;
+        padding: 9px 12px; border-radius: 9px; background: rgba(0,0,0,0.28); font-size: 0.83rem;
+      }
+      .badge-ok { background: rgba(16,185,129,0.16); color: #34d399; padding: 3px 9px; border-radius: 999px; font-size: 0.74rem; font-weight: 700; }
+      .badge-warn { background: rgba(245,158,11,0.16); color: #fbbf24; padding: 3px 9px; border-radius: 999px; font-size: 0.74rem; font-weight: 700; }
+
       .view-section { display: none; }
       .view-section.active { display: block; }
-      .search-input {
-        width: 100%; max-width: 300px; padding: 9px 12px; border-radius: 8px;
-        background: #090d16; border: 1px solid rgba(255,255,255,0.12); color: #fff; margin-bottom: 14px;
+
+      .data-row {
+        display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+        padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem;
       }
-      .save-btn {
-        padding: 10px 20px; border-radius: 10px; border: none; background: #22d3ee;
-        color: #090d16; font-weight: 700; margin-top: 14px;
+      .data-row:last-child { border-bottom: none; }
+      .btn-cyan {
+        padding: 8px 15px; border-radius: 9px; border: none; background: #22d3ee;
+        color: #070b14; font-weight: 700; font-size: 0.84rem;
+      }
+      .input-dark {
+        padding: 9px 12px; border-radius: 9px; background: #070b14;
+        border: 1px solid rgba(255,255,255,0.14); color: #fff; font-size: 0.88rem;
+      }
+
+      /* 모달 & 토스트 */
+      .modal-bg {
+        position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.75);
+        display: none; place-items: center; padding: 20px;
+      }
+      .modal-bg.open { display: grid; }
+      .modal {
+        width: 100%; max-width: 440px; background: #11192b; border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 18px; padding: 26px;
+      }
+      .toast-wrap { position: fixed; right: 20px; bottom: 20px; z-index: 120; display: flex; flex-direction: column; gap: 8px; }
+      .toast { background: #11192b; border: 1px solid #22d3ee; color: #fff; padding: 11px 16px; border-radius: 10px; font-size: 0.86rem; }
+
+      @media (max-width: 900px) {
+        body { flex-direction: column; }
+        aside { width: 100%; flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 12px; }
+        .app-brand { padding: 0 10px 0 0; white-space: nowrap; }
+        .nav-item { white-space: nowrap; }
+        .metrics, .chart-grid { grid-template-columns: 1fr; }
       }
     </style>
   </head>
   <body>
     <aside>
-      <div class="app-name">PULSE.CLOUD</div>
-      <button class="nav-item active" onclick="switchView('dashboard', this)">대시보드</button>
-      <button class="nav-item" onclick="switchView('users', this)">사용자 관리</button>
-      <button class="nav-item" onclick="switchView('billing', this)">결제 내역</button>
-      <button class="nav-item" onclick="switchView('settings', this)">시스템 설정</button>
+      <div class="app-brand"><span class="live-dot"></span><span>PULSE.CLOUD</span></div>
+      <button class="nav-item active" onclick="switchView('dashboard', this)">실시간 관제</button>
+      <button class="nav-item" onclick="switchView('analytics', this)">트래픽·매출 분석</button>
+      <button class="nav-item" onclick="switchView('users', this)">사용자·권한(RBAC)</button>
+      <button class="nav-item" onclick="switchView('billing', this)">결제·인보이스</button>
+      <button class="nav-item" onclick="switchView('settings', this)">시스템·Webhook</button>
     </aside>
 
     <main>
-      <!-- 1. 대시보드 화면 -->
+      <!-- 1. 실시간 관제 -->
       <section id="view-dashboard" class="view-section active">
         <div class="topbar">
-          <div>
-            <h1>실시간 서비스 운영 대시보드</h1>
-          </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div class="range-btns">
-              <button class="range-btn active" onclick="setRange('today', this)">오늘</button>
-              <button class="range-btn" onclick="setRange('week', this)">7일</button>
-              <button class="range-btn" onclick="setRange('month', this)">30일</button>
-            </div>
-            <span class="badge">● 정상 운영</span>
+          <h1>실시간 클라우드 관제</h1>
+          <div class="filter-group">
+            <select class="select-dark" id="region-select" onchange="updateChartData()">
+              <option value="all">전체 리전</option>
+              <option value="kr">서울 (ap-northeast-2)</option>
+              <option value="jp">도쿄 (ap-northeast-1)</option>
+              <option value="us">미국 동부 (us-east-1)</option>
+            </select>
+            <button class="pill-btn active" onclick="setRange('today', this)">오늘</button>
+            <button class="pill-btn" onclick="setRange('week', this)">7일</button>
+            <button class="pill-btn" onclick="setRange('month', this)">30일</button>
           </div>
         </div>
 
         <div class="banner-card">
           <img src="/images/demo-saas.jpg" alt="클라우드 데이터 네트워크" />
           <div class="banner-text">
-            <span style="font-size:0.78rem; color:#22d3ee;">클라우드 모니터링 · 포트폴리오 #3</span>
-            <strong style="font-size:1.15rem;">글로벌 트래픽 & 실시간 노드 상태 분석</strong>
+            <span style="font-size:0.78rem; color:#22d3ee;">ENTERPRISE INFRASTRUCTURE · PORTFOLIOS #3</span>
+            <strong style="font-size:1.12rem;">글로벌 트래픽 & API 응답 지연 실시간 모니터링</strong>
           </div>
         </div>
 
         <div class="metrics">
-          <div class="metric-card"><span>활성 사용자</span><strong id="m-users">12,480명</strong></div>
-          <div class="metric-card"><span>누적 매출</span><strong id="m-rev">₩24,500,000</strong></div>
-          <div class="metric-card"><span>API 평균 응답속도</span><strong id="m-lat">42ms</strong></div>
+          <div class="metric-card"><span>활성 세션</span><strong id="m-users">12,480명</strong><small>+14.2% 전일 대비</small></div>
+          <div class="metric-card"><span>기간 누적 매출</span><strong id="m-rev">₩24,500,000</strong><small>+8.7% 목표 초과</small></div>
+          <div class="metric-card"><span>API 평균 지연</span><strong id="m-lat">42ms</strong><small>SLA 99.98% 충족</small></div>
+          <div class="metric-card"><span>오류율</span><strong id="m-err">0.02%</strong><small>정상 임계치 이내</small></div>
         </div>
 
-        <div class="panel">
-          <h2>최근 처리된 사용자 활동</h2>
-          <div class="row"><span>김민수님 — 프리미엄 플랜 구독 결제 완료</span><span style="color:#34d399">완료</span></div>
-          <div class="row"><span>이서연님 — 신규 프로젝트 워크스페이스 생성</span><span style="color:#38bdf8">진행중</span></div>
-          <div class="row"><span>박지훈님 — 관리자 권한 초대 수락</span><span style="color:#34d399">완료</span></div>
-        </div>
-      </section>
+        <div class="chart-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>API 요청량 추이 (단위: 천 건)</h2>
+              <span style="font-size:0.78rem; color:#94a3b8;">포인트에 마우스를 올려보세요</span>
+            </div>
+            <div class="svg-wrap">
+              <svg id="line-chart" viewBox="0 0 560 200" style="width:100%; height:auto; display:block;"></svg>
+              <div class="chart-tooltip" id="chart-tooltip"></div>
+            </div>
+          </div>
 
-      <!-- 2. 사용자 관리 화면 -->
-      <section id="view-users" class="view-section">
-        <div class="topbar"><h1>사용자 관리</h1></div>
-        <div class="panel">
-          <input type="text" class="search-input" placeholder="이름으로 검색..." oninput="filterUsers(this.value)" />
-          <div id="user-list">
-            <div class="row" data-name="김민수"><span>김민수 (minsu@pulse.io)</span><span style="color:#22d3ee">Admin</span></div>
-            <div class="row" data-name="이서연"><span>이서연 (seoyeon@pulse.io)</span><span>Editor</span></div>
-            <div class="row" data-name="박지훈"><span>박지훈 (jihoon@pulse.io)</span><span>Viewer</span></div>
-            <div class="row" data-name="최유진"><span>최유진 (yujin@pulse.io)</span><span>Editor</span></div>
+          <div class="panel">
+            <div class="panel-head"><h2>클러스터 리소스 점유율</h2></div>
+            <div class="donut-wrap">
+              <svg width="130" height="130" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="44" fill="none" stroke="#1e293b" stroke-width="14" />
+                <circle id="donut-cpu" cx="60" cy="60" r="44" fill="none" stroke="#22d3ee" stroke-width="14" stroke-dasharray="150 276" transform="rotate(-90 60 60)" />
+                <circle id="donut-mem" cx="60" cy="60" r="44" fill="none" stroke="#6366f1" stroke-width="14" stroke-dasharray="80 276" stroke-dashoffset="-150" transform="rotate(-90 60 60)" />
+                <text x="60" y="64" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" id="donut-pct">68%</text>
+              </svg>
+              <div class="donut-legend">
+                <div><span class="legend-dot" style="background:#22d3ee;"></span>CPU 사용률 (<span id="lbl-cpu">42%</span>)</div>
+                <div><span class="legend-dot" style="background:#6366f1;"></span>메모리 (<span id="lbl-mem">26%</span>)</div>
+                <div><span class="legend-dot" style="background:#334155;"></span>여유 용량 (<span id="lbl-free">32%</span>)</div>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
 
-      <!-- 3. 결제 내역 화면 -->
-      <section id="view-billing" class="view-section">
-        <div class="topbar"><h1>결제 및 정산 내역</h1></div>
         <div class="panel">
-          <div class="row"><span>2026-11-14 · Pro 월간 구독 (주식회사 넥스트)</span><strong style="color:#34d399">₩79,000</strong></div>
-          <div class="row"><span>2026-11-13 · Enterprise 연간 계약 (아틀리에)</span><strong style="color:#34d399">₩1,824,000</strong></div>
-          <div class="row"><span>2026-11-12 · Starter 월간 구독 (스튜디오 봄)</span><strong style="color:#34d399">₩29,000</strong></div>
+          <div class="panel-head">
+            <h2>실시간 이벤트 스트림</h2>
+            <button class="pill-btn" id="stream-toggle" onclick="toggleStream()">스트림 일시정지</button>
+          </div>
+          <div class="log-list" id="live-logs"></div>
         </div>
       </section>
 
-      <!-- 4. 시스템 설정 화면 -->
-      <section id="view-settings" class="view-section">
-        <div class="topbar"><h1>시스템 환경 설정</h1></div>
+      <!-- 2. 트래픽·매출 분석 -->
+      <section id="view-analytics" class="view-section">
+        <div class="topbar"><h1>리전별 트래픽 & 매출 분석</h1></div>
         <div class="panel">
-          <div class="row"><span>장애 발생 시 Slack 실시간 알림</span><input type="checkbox" checked /></div>
-          <div class="row"><span>일일 트래픽 리포트 이메일 자동 발송</span><input type="checkbox" checked /></div>
-          <div class="row"><span>2단계 인증(2FA) 필수 적용</span><input type="checkbox" /></div>
-          <button class="save-btn" onclick="alert('시스템 설정이 성공적으로 저장되었습니다!')">설정 저장하기</button>
+          <h2 style="margin-bottom:14px;">리전별 기여도 리포트</h2>
+          <div class="data-row"><span>서울 리전 (ap-northeast-2)</span><strong style="color:#22d3ee;">트래픽 58% · ₩14,210,000</strong></div>
+          <div class="data-row"><span>도쿄 리전 (ap-northeast-1)</span><strong style="color:#34d399;">트래픽 24% · ₩5,880,000</strong></div>
+          <div class="data-row"><span>미국 동부 (us-east-1)</span><strong style="color:#a5b4fc;">트래픽 18% · ₩4,410,000</strong></div>
+        </div>
+      </section>
+
+      <!-- 3. 사용자·권한(RBAC) -->
+      <section id="view-users" class="view-section">
+        <div class="topbar">
+          <h1>사용자 및 권한 관리 (RBAC)</h1>
+          <div class="filter-group">
+            <button class="pill-btn" onclick="exportUsersCSV()">CSV 내보내기</button>
+            <button class="btn-cyan" onclick="openInviteModal()">+ 팀원 초대</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="filter-group" style="margin-bottom:14px;">
+            <input type="text" class="input-dark" placeholder="이름 또는 이메일 검색..." oninput="filterUsers(this.value)" style="flex:1; min-width:200px;" />
+            <select class="select-dark" onchange="filterRole(this.value)">
+              <option value="all">전체 권한</option>
+              <option value="Admin">Admin</option>
+              <option value="Editor">Editor</option>
+              <option value="Viewer">Viewer</option>
+            </select>
+          </div>
+          <div id="user-list"></div>
+        </div>
+      </section>
+
+      <!-- 4. 결제·인보이스 -->
+      <section id="view-billing" class="view-section">
+        <div class="topbar">
+          <h1>결제 및 인보이스 내역</h1>
+          <select class="select-dark" onchange="renderInvoices(this.value)">
+            <option value="all">전체 상태</option>
+            <option value="결제완료">결제완료</option>
+            <option value="정산대기">정산대기</option>
+          </select>
+        </div>
+        <div class="panel">
+          <p style="font-size:0.84rem; color:#94a3b8; margin-bottom:10px;">행의 [영수증 보기]를 눌러 상세 인보이스를 확인하세요.</p>
+          <div id="invoice-list"></div>
+        </div>
+      </section>
+
+      <!-- 5. 시스템·Webhook 설정 -->
+      <section id="view-settings" class="view-section">
+        <div class="topbar"><h1>시스템 및 Webhook 설정</h1></div>
+        <div class="panel">
+          <div class="data-row"><span>장애 임계치 초과 시 Slack Webhook 즉시 알림</span><input type="checkbox" id="set-slack" checked /></div>
+          <div class="data-row"><span>일일 요약 리포트 이메일 발송</span><input type="checkbox" id="set-email" checked /></div>
+          <div class="data-row">
+            <span>Webhook 수신 URL</span>
+            <input type="url" class="input-dark" id="set-webhook" value="https://hooks.pulse.cloud/v1/notify" style="width:280px;" />
+          </div>
+          <button class="btn-cyan" style="margin-top:16px;" onclick="saveSettings()">설정 저장하기</button>
         </div>
       </section>
     </main>
 
+    <!-- 팀원 초대 모달 -->
+    <div class="modal-bg" id="invite-modal" onclick="closeInviteModal()">
+      <div class="modal" onclick="event.stopPropagation()">
+        <h3 style="margin-bottom:14px;">새 팀원 초대하기</h3>
+        <form onsubmit="submitInvite(event)" style="display:flex; flex-direction:column; gap:12px;">
+          <input type="text" class="input-dark" id="inv-name" placeholder="이름 (예: 강하늘)" required />
+          <input type="email" class="input-dark" id="inv-email" placeholder="이메일 (예: haneul@pulse.io)" required />
+          <select class="select-dark" id="inv-role">
+            <option value="Editor">Editor</option>
+            <option value="Admin">Admin</option>
+            <option value="Viewer">Viewer</option>
+          </select>
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <button type="button" class="pill-btn" style="flex:1;" onclick="closeInviteModal()">취소</button>
+            <button type="submit" class="btn-cyan" style="flex:2;">초대 및 등록</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 인보이스 모달 -->
+    <div class="modal-bg" id="inv-modal" onclick="this.classList.remove('open')">
+      <div class="modal" onclick="event.stopPropagation()">
+        <h3 style="margin-bottom:12px;">전자 세금계산서 / 인보이스</h3>
+        <div id="inv-detail" style="font-size:0.9rem; color:#cbd5e1; line-height:1.8; margin-bottom:18px;"></div>
+        <button class="btn-cyan" style="width:100%;" onclick="document.getElementById('inv-modal').classList.remove('open')">확인</button>
+      </div>
+    </div>
+
+    <div class="toast-wrap" id="toast-wrap"></div>
+
     <script>
-      const rangeStats = {
-        today: { users: '12,480명', rev: '₩24,500,000', lat: '42ms' },
-        week: { users: '48,920명', rev: '₩89,200,000', lat: '39ms' },
-        month: { users: '182,400명', rev: '₩342,000,000', lat: '41ms' },
+      const STORE_USERS = 'pulse_saas_users_v1';
+      const defaultUsers = [
+        { id: 1, name: '김민수', email: 'minsu@pulse.io', role: 'Admin' },
+        { id: 2, name: '이서연', email: 'seoyeon@pulse.io', role: 'Editor' },
+        { id: 3, name: '박지훈', email: 'jihoon@pulse.io', role: 'Viewer' },
+        { id: 4, name: '최유진', email: 'yujin@pulse.io', role: 'Editor' },
+      ];
+      let users = JSON.parse(localStorage.getItem(STORE_USERS) || 'null') || defaultUsers;
+      let userSearch = '';
+      let userRoleFilter = 'all';
+      let currentRange = 'today';
+      let streamActive = true;
+
+      const invoices = [
+        { id: 'INV-2026-114', date: '2026-11-14', company: '주식회사 넥스트', plan: 'Pro 월간 구독', amount: '₩79,000', status: '결제완료' },
+        { id: 'INV-2026-113', date: '2026-11-13', company: '아틀리에 스튜디오', plan: 'Enterprise 연간 계약', amount: '₩1,824,000', status: '결제완료' },
+        { id: 'INV-2026-112', date: '2026-11-12', company: '메종 셀렉트', plan: 'Pro 월간 구독', amount: '₩79,000', status: '정산대기' },
+      ];
+
+      const chartSeries = {
+        today: { users: '12,480명', rev: '₩24,500,000', lat: '42ms', cpu: 42, mem: 26, pts: [28, 45, 38, 62, 74, 68, 91] },
+        week: { users: '48,920명', rev: '₩89,200,000', lat: '39ms', cpu: 51, mem: 29, pts: [120, 145, 138, 172, 165, 198, 214] },
+        month: { users: '182,400명', rev: '₩342,000,000', lat: '41ms', cpu: 48, mem: 31, pts: [410, 480, 520, 495, 610, 680, 745] },
       };
+
+      function escapeHtml(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function showToast(msg) {
+        const wrap = document.getElementById('toast-wrap');
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.textContent = msg;
+        wrap.appendChild(el);
+        setTimeout(() => el.remove(), 2800);
+      }
+
       function switchView(name, btn) {
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + name).classList.add('active');
       }
+
       function setRange(key, btn) {
-        document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const data = rangeStats[key];
-        document.getElementById('m-users').textContent = data.users;
-        document.getElementById('m-rev').textContent = data.rev;
-        document.getElementById('m-lat').textContent = data.lat;
-      }
-      function filterUsers(q) {
-        document.querySelectorAll('#user-list .row').forEach(row => {
-          row.style.display = row.dataset.name.includes(q.trim()) ? 'flex' : 'none';
+        currentRange = key;
+        document.querySelectorAll('.pill-btn').forEach(b => {
+          if (['오늘', '7일', '30일'].includes(b.textContent)) b.classList.remove('active');
         });
+        btn.classList.add('active');
+        updateChartData();
       }
+
+      function updateChartData() {
+        const region = document.getElementById('region-select').value;
+        const mult = region === 'all' ? 1 : region === 'kr' ? 0.58 : region === 'jp' ? 0.24 : 0.18;
+        const base = chartSeries[currentRange];
+
+        document.getElementById('m-users').textContent = base.users;
+        document.getElementById('m-rev').textContent = base.rev;
+        document.getElementById('m-lat').textContent = base.lat;
+
+        const cpu = Math.round(base.cpu * (region === 'all' ? 1 : 0.85));
+        const mem = base.mem;
+        const total = cpu + mem;
+        const circ = 276;
+        const cpuDash = Math.round((cpu / 100) * circ);
+        const memDash = Math.round((mem / 100) * circ);
+        document.getElementById('donut-cpu').setAttribute('stroke-dasharray', `${cpuDash} ${circ}`);
+        document.getElementById('donut-mem').setAttribute('stroke-dasharray', `${memDash} ${circ}`);
+        document.getElementById('donut-mem').setAttribute('stroke-dashoffset', `-${cpuDash}`);
+        document.getElementById('donut-pct').textContent = `${total}%`;
+        document.getElementById('lbl-cpu').textContent = `${cpu}%`;
+        document.getElementById('lbl-mem').textContent = `${mem}%`;
+        document.getElementById('lbl-free').textContent = `${Math.max(0, 100 - total)}%`;
+
+        const pts = base.pts.map(v => Math.max(8, Math.round(v * mult)));
+        drawLineChart(pts);
+      }
+
+      function drawLineChart(pts) {
+        const svg = document.getElementById('line-chart');
+        const tooltip = document.getElementById('chart-tooltip');
+        const maxVal = Math.max(...pts) * 1.15;
+        const w = 560, h = 200, pad = 28;
+        const coords = pts.map((v, i) => ({
+          x: pad + (i * (w - pad * 2)) / (pts.length - 1),
+          y: h - pad - (v / maxVal) * (h - pad * 2),
+          v,
+        }));
+        const poly = coords.map(c => `${c.x},${c.y}`).join(' ');
+        const area = `${coords[0].x},${h - pad} ${poly} ${coords[coords.length - 1].x},${h - pad}`;
+
+        svg.innerHTML = `
+          <defs>
+            <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.35" />
+              <stop offset="100%" stop-color="#22d3ee" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <polygon points="${area}" fill="url(#gArea)" />
+          <polyline points="${poly}" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" />
+          ${coords.map((c, idx) => `
+            <circle cx="${c.x}" cy="${c.y}" r="5.5" fill="#070b14" stroke="#22d3ee" stroke-width="2.5"
+              style="cursor:pointer;"
+              onmouseenter="showChartTip(event, '구간 ${idx + 1}: ${c.v.toLocaleString()}k req')"
+              onmouseleave="hideChartTip()" />
+          `).join('')}
+        `;
+      }
+
+      function showChartTip(evt, text) {
+        const tip = document.getElementById('chart-tooltip');
+        const rect = document.querySelector('.svg-wrap').getBoundingClientRect();
+        tip.textContent = text;
+        tip.style.left = `${Math.min(rect.width - 130, evt.clientX - rect.left + 10)}px`;
+        tip.style.top = `${Math.max(0, evt.clientY - rect.top - 32)}px`;
+        tip.style.display = 'block';
+      }
+      function hideChartTip() { document.getElementById('chart-tooltip').style.display = 'none'; }
+
+      const sampleEvents = [
+        { msg: 'ap-northeast-2 오토스케일링 노드 +2 증설 완료', ok: true },
+        { msg: 'Pro 플랜 정기 결제 Webhook 처리 완료 (₩79,000)', ok: true },
+        { msg: 'us-east-1 일시적 지연 감지 (92ms) → 캐시 우회 적용', ok: false },
+        { msg: '신규 워크스페이스 SSL 인증서 자동 갱신 성공', ok: true },
+      ];
+      function pushLog(item) {
+        const box = document.getElementById('live-logs');
+        const row = document.createElement('div');
+        row.className = 'log-row';
+        const time = new Date().toTimeString().slice(0, 8);
+        row.innerHTML = `<span>[${time}] ${escapeHtml(item.msg)}</span><span class="${item.ok ? 'badge-ok' : 'badge-warn'}">${item.ok ? '성공' : '주의'}</span>`;
+        box.prepend(row);
+        if (box.children.length > 8) box.lastElementChild.remove();
+      }
+      function toggleStream() {
+        streamActive = !streamActive;
+        document.getElementById('stream-toggle').textContent = streamActive ? '스트림 일시정지' : '스트림 재개';
+      }
+      setInterval(() => {
+        if (streamActive) {
+          const item = sampleEvents[Math.floor(Math.random() * sampleEvents.length)];
+          pushLog(item);
+        }
+      }, 3500);
+
+      function renderUsers() {
+        const list = users.filter(u =>
+          (userRoleFilter === 'all' || u.role === userRoleFilter) &&
+          (u.name.includes(userSearch) || u.email.includes(userSearch))
+        );
+        document.getElementById('user-list').innerHTML = list.map(u => `
+          <div class="data-row">
+            <div><strong>${escapeHtml(u.name)}</strong> <span style="color:#94a3b8; font-size:0.84rem;">(${escapeHtml(u.email)})</span></div>
+            <select class="select-dark" onchange="changeUserRole(${u.id}, this.value)">
+              <option value="Admin" ${u.role === 'Admin' ? 'selected' : ''}>Admin</option>
+              <option value="Editor" ${u.role === 'Editor' ? 'selected' : ''}>Editor</option>
+              <option value="Viewer" ${u.role === 'Viewer' ? 'selected' : ''}>Viewer</option>
+            </select>
+          </div>
+        `).join('');
+      }
+      function filterUsers(val) { userSearch = val.trim(); renderUsers(); }
+      function filterRole(val) { userRoleFilter = val; renderUsers(); }
+      function changeUserRole(id, role) {
+        users = users.map(u => u.id === id ? { ...u, role } : u);
+        localStorage.setItem(STORE_USERS, JSON.stringify(users));
+        showToast(`권한이 ${role}로 변경되었습니다.`);
+      }
+      function openInviteModal() { document.getElementById('invite-modal').classList.add('open'); }
+      function closeInviteModal() { document.getElementById('invite-modal').classList.remove('open'); }
+      function submitInvite(e) {
+        e.preventDefault();
+        const name = document.getElementById('inv-name').value.trim();
+        const email = document.getElementById('inv-email').value.trim();
+        const role = document.getElementById('inv-role').value;
+        users.unshift({ id: Date.now(), name, email, role });
+        localStorage.setItem(STORE_USERS, JSON.stringify(users));
+        renderUsers();
+        closeInviteModal();
+        e.target.reset();
+        showToast(`${name}님이 팀원으로 초대되었습니다.`);
+      }
+      function exportUsersCSV() {
+        const csv = 'Name,Email,Role\n' + users.map(u => `${u.name},${u.email},${u.role}`).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'pulse-users.csv';
+        a.click();
+        showToast('pulse-users.csv 파일이 다운로드되었습니다.');
+      }
+
+      function renderInvoices(statusFilter = 'all') {
+        const list = invoices.filter(i => statusFilter === 'all' || i.status === statusFilter);
+        document.getElementById('invoice-list').innerHTML = list.map(i => `
+          <div class="data-row">
+            <div><strong>${i.id}</strong> · ${i.date} · ${escapeHtml(i.company)} (${escapeHtml(i.plan)})</div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <strong>${i.amount}</strong>
+              <span class="${i.status === '결제완료' ? 'badge-ok' : 'badge-warn'}">${i.status}</span>
+              <button class="pill-btn" onclick="openInvoice('${i.id}')">영수증 보기</button>
+            </div>
+          </div>
+        `).join('');
+      }
+      function openInvoice(id) {
+        const inv = invoices.find(i => i.id === id);
+        document.getElementById('inv-detail').innerHTML = `
+          <div>• 문서번호: <strong>${inv.id}</strong></div>
+          <div>• 발행일: ${inv.date}</div>
+          <div>• 고객사: ${escapeHtml(inv.company)}</div>
+          <div>• 이용 플랜: ${escapeHtml(inv.plan)}</div>
+          <div>• 결제 금액: <strong style="color:#22d3ee;">${inv.amount}</strong> (${inv.status})</div>
+        `;
+        document.getElementById('inv-modal').classList.add('open');
+      }
+      function saveSettings() {
+        localStorage.setItem('pulse_settings', JSON.stringify({
+          slack: document.getElementById('set-slack').checked,
+          email: document.getElementById('set-email').checked,
+          webhook: document.getElementById('set-webhook').value,
+        }));
+        showToast('시스템 및 Webhook 설정이 저장되었습니다.');
+      }
+
+      sampleEvents.slice(0, 3).forEach(pushLog);
+      updateChartData();
+      renderUsers();
+      renderInvoices();
     </script>
   </body>
 </html>

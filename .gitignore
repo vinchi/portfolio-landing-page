@@ -8,3 +8,8 @@ dist-ssr/
 .DS_Store
 .vscode/
 .idea/
+
+# Firebase 배포 캐시 및 임시 생성물 제외
+.firebase/
+.dataconnect/
+firebase-debug.log

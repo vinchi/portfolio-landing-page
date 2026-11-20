@@ -1,5 +1,6 @@
-// 전체 앱의 최상위 컨트롤러: 일반 홈페이지 화면과 관리자 대시보드 화면을 전환하고 데이터를 관리합니다.
+// 전체 앱의 최상위 컨트롤러: 페이지 라우팅(홈/로그인/내 정보/관리자), Firebase Auth, SQL Connect 연결 관리
 import { useState, useEffect } from 'react'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { Sparkles, X, Calculator } from 'lucide-react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -7,22 +8,49 @@ import PortfolioViewer from './components/PortfolioViewer'
 import QuoteBuilder from './components/QuoteBuilder'
 import Footer from './components/Footer'
 import AdminDashboard from './components/AdminDashboard'
+import LoginPage from './components/LoginPage'
+import ProfilePage from './components/ProfilePage'
+import LegalPage from './components/LegalPage'
 import {
   portfolioSites as defaultSites,
   quotePlans as defaultPlans,
   quoteFeatures as defaultFeatures,
 } from './data/portfolioData'
-import { STORAGE_KEYS, encryptPayload, decryptPayload } from './utils/storageCrypto'
+import { STORAGE_KEYS } from './utils/storageCrypto'
+import { auth, isFirebaseEnabled } from './lib/firebase'
+import {
+  defaultEventConfig,
+  fetchAllAppData,
+  insertQuote,
+  updateQuoteStatusInDb,
+  deleteQuoteInDb,
+  savePortfoliosToDb,
+  savePlansToDb,
+  saveFeaturesToDb,
+  saveEventConfigToDb,
+} from './services/dbService'
 
-const defaultEventConfig = {
-  isHalfPriceActive: false,
-  title: '🎉 특별 반값 할인 이벤트!',
-  subtitle: '지금 견적을 작성하시면 모든 웹사이트 제작 비용이 50% 반값으로 자동 적용됩니다.',
+const LEGAL_ROUTES = ['terms', 'privacy', 'refund', 'email-policy']
+
+function getRouteFromHash() {
+  const h = window.location.hash
+  if (h === '#admin') return 'admin'
+  if (h === '#login') return 'login'
+  if (h === '#profile') return 'profile'
+  if (h === '#terms') return 'terms'
+  if (h === '#privacy') return 'privacy'
+  if (h === '#refund') return 'refund'
+  if (h === '#email-policy') return 'email-policy'
+  return 'home'
 }
 
 export default function App() {
-  // 현재 화면 모드 (false: 일반 홈페이지, true: 관리자 페이지)
-  const [isAdminView, setIsAdminView] = useState(() => window.location.hash === '#admin')
+  // 현재 라우트 ('home' | 'login' | 'profile' | 'admin')
+  const [route, setRoute] = useState(getRouteFromHash)
+  // Firebase 사용자 로그인 상태
+  const [currentUser, setCurrentUser] = useState(null)
+  const [authReady, setAuthReady] = useState(!auth)
+
   // 관리자 로그인 여부 (세션 동안 유지)
   const [isAdminAuth, setIsAdminAuth] = useState(
     () => sessionStorage.getItem(STORAGE_KEYS.ADMIN_SESSION) === 'true'
@@ -31,159 +59,149 @@ export default function App() {
   // 포트폴리오 뷰어에서 선택한 스타일을 견적 계산기로 연결
   const [preselectedPlanId, setPreselectedPlanId] = useState(null)
 
-  // 관리 가능한 상태 데이터 (초기값은 portfolioData.js에서 로드)
-  const [portfolios, setPortfolios] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.PORTFOLIOS)
-      return saved ? JSON.parse(saved) : defaultSites
-    } catch {
-      return defaultSites
-    }
-  })
-
-  const [plans, setPlans] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.PLANS)
-      return saved ? JSON.parse(saved) : defaultPlans
-    } catch {
-      return defaultPlans
-    }
-  })
-
-  const [features, setFeatures] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.FEATURES)
-      return saved ? JSON.parse(saved) : defaultFeatures
-    } catch {
-      return defaultFeatures
-    }
-  })
-
-  // 반값 할인 이벤트 설정 상태
-  const [eventConfig, setEventConfig] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.EVENT_CONFIG)
-      return saved ? JSON.parse(saved) : defaultEventConfig
-    } catch {
-      return defaultEventConfig
-    }
-  })
+  // 핵심 데이터 상태
+  const [portfolios, setPortfolios] = useState(defaultSites)
+  const [plans, setPlans] = useState(defaultPlans)
+  const [features, setFeatures] = useState(defaultFeatures)
+  const [eventConfig, setEventConfig] = useState(defaultEventConfig)
+  const [quotes, setQuotes] = useState([])
 
   // 메인 페이지 진입 시 반값 할인 팝업 표시 여부
   const [showEventPopup, setShowEventPopup] = useState(false)
 
+  // Firebase Auth 로그인 상태 구독
   useEffect(() => {
-    if (!isAdminView && eventConfig.isHalfPriceActive) {
+    if (!auth) return undefined
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user)
+      setAuthReady(true)
+    })
+    return () => unsubscribe()
+  }, [])
+
+  // 앱 시작 시 Firebase SQL Connect(또는 localStorage)에서 전체 데이터 불러오기
+  useEffect(() => {
+    async function init() {
+      const data = await fetchAllAppData()
+      setPortfolios(data.portfolios)
+      setPlans(data.plans)
+      setFeatures(data.features)
+      setEventConfig(data.eventConfig)
+      setQuotes(data.quotes)
+    }
+    init()
+  }, [])
+
+  // 메인 홈 화면일 때만 반값 할인 팝업 표시
+  useEffect(() => {
+    if (route === 'home' && eventConfig.isHalfPriceActive) {
       setShowEventPopup(true)
     } else {
       setShowEventPopup(false)
     }
-  }, [isAdminView, eventConfig.isHalfPriceActive])
+  }, [route, eventConfig.isHalfPriceActive])
 
-  // 접수된 견적 문의 목록 (AES-GCM 암호화되어 localStorage에 저장됨)
-  const [quotes, setQuotes] = useState([])
-
-  // 앱 시작 시 암호화된 견적 목록 복호화하여 불러오기
-  useEffect(() => {
-    async function loadQuotes() {
-      const encrypted = localStorage.getItem(STORAGE_KEYS.QUOTES)
-      if (encrypted) {
-        const decrypted = await decryptPayload(encrypted)
-        if (Array.isArray(decrypted)) {
-          setQuotes(decrypted)
-        }
-      }
-    }
-    loadQuotes()
-  }, [])
-
-  // URL 해시(#admin) 변경 감지
+  // URL 해시 변경 감지
   useEffect(() => {
     const handleHashChange = () => {
-      setIsAdminView(window.location.hash === '#admin')
+      setRoute(getRouteFromHash())
     }
     window.addEventListener('hashchange', handleHashChange)
     return () => window.removeEventListener('hashchange', handleHashChange)
   }, [])
 
-  // 견적 목록 변경 시 암호화하여 저장하는 헬퍼 함수
-  const persistQuotes = async (nextQuotes) => {
-    setQuotes(nextQuotes)
-    const encrypted = await encryptPayload(nextQuotes)
-    localStorage.setItem(STORAGE_KEYS.QUOTES, encrypted)
-  }
-
-  // 사용자가 견적을 제출했을 때 호출
-  const handleSubmitQuote = async (quoteData) => {
-    const newEntry = {
-      id: `quote-${Date.now()}`,
-      createdAt: new Date().toLocaleString('ko-KR'),
-      status: '접수대기',
-      ...quoteData,
+  // 내 정보 페이지 보호: 비로그인 상태에서 #profile 접근 시 로그인 페이지로 이동
+  useEffect(() => {
+    if (authReady && route === 'profile' && !currentUser) {
+      navigateTo('login')
     }
-    await persistQuotes([newEntry, ...quotes])
+  }, [authReady, route, currentUser])
+
+  const navigateTo = (target, scrollTop = true) => {
+    const hashMap = {
+      home: '',
+      login: '#login',
+      profile: '#profile',
+      admin: '#admin',
+      terms: '#terms',
+      privacy: '#privacy',
+      refund: '#refund',
+      'email-policy': '#email-policy',
+    }
+    window.location.hash = hashMap[target] ?? ''
+    setRoute(target)
+    if (scrollTop) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
-  // 관리자: 견적 상태 변경
+  // 사용자 로그아웃 처리
+  const handleUserLogout = async () => {
+    if (auth) {
+      await signOut(auth)
+    }
+    if (route === 'profile') {
+      navigateTo('home')
+    }
+  }
+
+  // 견적 제출 처리 (AES-GCM 암호화 후 DB 저장)
+  const handleSubmitQuote = async (quoteData) => {
+    const created = await insertQuote(quoteData, quotes)
+    setQuotes((prev) => [created, ...prev])
+  }
+
+  // 관리자: 견적 상태 변경 / 삭제
   const handleUpdateQuoteStatus = async (id, nextStatus) => {
     const updated = quotes.map((q) => (q.id === id ? { ...q, status: nextStatus } : q))
-    await persistQuotes(updated)
+    setQuotes(updated)
+    await updateQuoteStatusInDb(id, nextStatus, updated)
   }
 
-  // 관리자: 견적 삭제
   const handleDeleteQuote = async (id) => {
     const updated = quotes.filter((q) => q.id !== id)
-    await persistQuotes(updated)
+    setQuotes(updated)
+    await deleteQuoteInDb(id, updated)
   }
 
-  // 관리자: 포트폴리오 / 단가 저장
-  const handleSavePortfolios = (nextPortfolios) => {
+  // 관리자: 포트폴리오 / 단가 / 이벤트 저장
+  const handleSavePortfolios = async (nextPortfolios) => {
+    const prev = portfolios
     setPortfolios(nextPortfolios)
-    localStorage.setItem(STORAGE_KEYS.PORTFOLIOS, JSON.stringify(nextPortfolios))
+    await savePortfoliosToDb(nextPortfolios, prev)
   }
 
-  const handleSavePlans = (nextPlans) => {
+  const handleSavePlans = async (nextPlans) => {
     setPlans(nextPlans)
-    localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(nextPlans))
+    await savePlansToDb(nextPlans)
   }
 
-  const handleSaveFeatures = (nextFeatures) => {
+  const handleSaveFeatures = async (nextFeatures) => {
     setFeatures(nextFeatures)
-    localStorage.setItem(STORAGE_KEYS.FEATURES, JSON.stringify(nextFeatures))
+    await saveFeaturesToDb(nextFeatures)
   }
 
-  const handleSaveEventConfig = (nextConfig) => {
+  const handleSaveEventConfig = async (nextConfig) => {
     setEventConfig(nextConfig)
-    localStorage.setItem(STORAGE_KEYS.EVENT_CONFIG, JSON.stringify(nextConfig))
+    await saveEventConfigToDb(nextConfig)
   }
 
-  // 기본값으로 초기화
-  const handleResetDefaults = () => {
+  const handleResetDefaults = async () => {
     if (!window.confirm('포트폴리오와 견적 단가를 초기 기본값으로 되돌릴까요?')) return
-    handleSavePortfolios(defaultSites)
-    handleSavePlans(defaultPlans)
-    handleSaveFeatures(defaultFeatures)
+    await Promise.all([
+      handleSavePortfolios(defaultSites),
+      handleSavePlans(defaultPlans),
+      handleSaveFeatures(defaultFeatures),
+    ])
   }
 
-  // 관리자 화면 열기/닫기 및 로그인/로그아웃
-  const openAdmin = () => {
-    window.location.hash = 'admin'
-    setIsAdminView(true)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const exitAdmin = () => {
-    window.location.hash = ''
-    setIsAdminView(false)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const handleLoginSuccess = () => {
+  // 관리자 인증 처리
+  const handleAdminLoginSuccess = () => {
     setIsAdminAuth(true)
     sessionStorage.setItem(STORAGE_KEYS.ADMIN_SESSION, 'true')
   }
 
-  const handleLogout = () => {
+  const handleAdminLogout = () => {
     setIsAdminAuth(false)
     sessionStorage.removeItem(STORAGE_KEYS.ADMIN_SESSION)
   }
@@ -197,13 +215,14 @@ export default function App() {
         <div className="orb orb-3" />
       </div>
 
-      {isAdminView ? (
+      {route === 'admin' ? (
         <main>
           <AdminDashboard
             isAuthenticated={isAdminAuth}
-            onLoginSuccess={handleLoginSuccess}
-            onLogout={handleLogout}
-            onExitAdmin={exitAdmin}
+            isFirebaseEnabled={isFirebaseEnabled}
+            onLoginSuccess={handleAdminLoginSuccess}
+            onLogout={handleAdminLogout}
+            onExitAdmin={() => navigateTo('home')}
             quotes={quotes}
             onUpdateQuoteStatus={handleUpdateQuoteStatus}
             onDeleteQuote={handleDeleteQuote}
@@ -220,25 +239,67 @@ export default function App() {
         </main>
       ) : (
         <>
-          <Navbar onOpenAdmin={openAdmin} />
-          <main>
-            <Hero />
-            <PortfolioViewer
-              portfolios={portfolios}
-              onSelectStyleForQuote={setPreselectedPlanId}
-            />
-            <QuoteBuilder
-              plans={plans}
-              features={features}
-              eventConfig={eventConfig}
-              preselectedPlanId={preselectedPlanId}
-              onSubmitQuote={handleSubmitQuote}
-            />
-          </main>
-          <Footer onOpenAdmin={openAdmin} />
+          <Navbar
+            currentUser={currentUser}
+            onGoHome={(scroll = true) => navigateTo('home', scroll)}
+            onOpenLogin={() => navigateTo('login')}
+            onOpenProfile={() => navigateTo('profile')}
+            onLogout={handleUserLogout}
+          />
+
+          {route === 'login' && (
+            <main>
+              <LoginPage
+                onSuccess={() => navigateTo('profile')}
+                onBackHome={() => navigateTo('home')}
+              />
+            </main>
+          )}
+
+          {route === 'profile' && (
+            <main>
+              <ProfilePage
+                user={currentUser}
+                onLogout={handleUserLogout}
+                onBackHome={() => navigateTo('home')}
+              />
+            </main>
+          )}
+
+          {LEGAL_ROUTES.includes(route) && (
+            <main>
+              <LegalPage
+                activeKey={route}
+                onSelectDoc={(docKey) => navigateTo(docKey)}
+                onBackHome={() => navigateTo('home')}
+              />
+            </main>
+          )}
+
+          {route === 'home' && (
+            <main>
+              <Hero />
+              <PortfolioViewer
+                portfolios={portfolios}
+                onSelectStyleForQuote={setPreselectedPlanId}
+              />
+              <QuoteBuilder
+                plans={plans}
+                features={features}
+                eventConfig={eventConfig}
+                preselectedPlanId={preselectedPlanId}
+                onSubmitQuote={handleSubmitQuote}
+              />
+            </main>
+          )}
+
+          <Footer
+            onOpenAdmin={() => navigateTo('admin')}
+            onOpenLegal={(docKey) => navigateTo(docKey)}
+          />
 
           {/* 관리자에서 반값 할인 이벤트를 켰을 때 메인 페이지에 뜨는 팝업 */}
-          {showEventPopup && (
+          {route === 'home' && showEventPopup && (
             <div className="modal-backdrop" onClick={() => setShowEventPopup(false)}>
               <div
                 className="modal-content event-popup-modal"
